@@ -24,10 +24,12 @@ impl Plugin for RobotPlugin{
 fn spawn_robot(mut commands: Commands,scene_assets: Res<SceneAssets>,
                 game_data: Res<GameData>
 ){
+    let mut transform = Transform::from_translation(Vec3::ZERO).looking_at(Vec3::Z,Vec3::ZERO);
+    transform.translation = game_data.robot_data.robot_translation;
     commands.spawn((RobotBundle{
         model:SceneBundle{
             scene: scene_assets.robot.clone(),
-            transform: Transform::from_translation(game_data.robot_data.robot_translation).looking_at(Vec3::Z,game_data.robot_data.robot_translation),
+            transform,
             ..default()
         },
     }, RobotComponent));

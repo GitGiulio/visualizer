@@ -90,7 +90,7 @@ fn destroy_test(keyboard_input: Res<Input<KeyCode>>, mut game_update: ResMut<Gam
         game_update.azioni.push((
             crate::RobotAction::Move {
                 direction: crate::Direction::Up,
-                elevation: 1.0,
+                elevation: 0.0,
                 energy: -10,
                 points: 4.0,
             },WeatherType::Sunny)
@@ -99,7 +99,7 @@ fn destroy_test(keyboard_input: Res<Input<KeyCode>>, mut game_update: ResMut<Gam
         game_update.azioni.push((
             crate::RobotAction::Move {
                 direction: crate::Direction::Left,
-                elevation: -1.0,
+                elevation: 0.0,
                 energy:-10,
                 points: 2.0,
             },WeatherType::Sunny)

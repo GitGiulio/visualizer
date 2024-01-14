@@ -51,11 +51,13 @@ pub struct GameUpdate{ //non so ancora bene come funziona rip
 pub struct VisualizerGLC{
 }
 impl VisualizerGLC{
-    pub fn run(energy:usize, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize){
+    pub fn run( robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize){
         let mut robot_data = RobotData::new();
+        robot_data.energy = energy as i32;
         robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0,robot_spawn.1 as f32)).translation;
         let mut camera_data= CameraData::new();
-        camera_data.camera_transform = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,(robot_elevation as f32 /10.0) + 10.0,robot_spawn.1 as f32)).looking_at(Vec3::Z,Vec3::ZERO);
+        camera_data.camera_transform = Transform::from_translation(Vec3::new(0.0,10.0,0.0)).looking_at(Vec3::ZERO,Vec3::Z);
+        camera_data.camera_transform.translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,(robot_elevation as f32 /10.0) + 10.0,robot_spawn.1 as f32)).translation;
         App::new()
             .insert_resource(GameData{
                 autoplay:true,
@@ -94,7 +96,7 @@ fn main(){
 
     let mut mondo = generator.gen();
 
-    VisualizerGLC::run(5000,from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation);
+    VisualizerGLC::run(from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000);
 }
 
 fn from_map_to_action_vec(map:Vec<Vec<Tile>>)->Vec<(RobotAction,WeatherType)>{
