@@ -7,12 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/target/.rustc_info.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/.rustc_info.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/debug/deps/bevy_pbr-52feb3465da0a60e.bevy_pbr.16f58fb61a81b6e2-cgu.01.rcgu.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/debug/deps/bevy_pbr-52feb3465da0a60e.bevy_pbr.16f58fb61a81b6e2-cgu.02.rcgu.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/debug/deps/bevy_pbr-52feb3465da0a60e.bevy_pbr.16f58fb61a81b6e2-cgu.12.rcgu.o" beforeDir="false" />
-    </list>
+    <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -78,7 +73,7 @@
       <option name="presentableId" value="Default" />
       <updated>1705223102741</updated>
       <workItem from="1705223103923" duration="22000" />
-      <workItem from="1705223274608" duration="933000" />
+      <workItem from="1705223274608" duration="2014000" />
     </task>
     <servers />
   </component>

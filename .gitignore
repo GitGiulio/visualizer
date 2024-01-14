@@ -1,5 +1,2 @@
-
-target/debug/bevy_visualizer.pdb
-target/debug/deps/bevy_visualizer.pdb
-target/debug/deps/libbevy_render-f50a11ae165d4c05.rlib
-target/debug/deps/libwgpu-6925f5893fe8f061.rlib
+\target
+.idea/workspace.xml
