@@ -3461,7 +3461,7 @@ checksum = "216080ab382b992234dda86873c18d4c48358f5cfcb70fd693d7f6f2131b628b"
 [[package]]
 name = "robotics_lib"
 version = "0.1.22"
-source = "git+https://github.com/Advanced-Programming-2023/Robotic-Lib#36861844d90a1fec175960b254784bc9926dd7b0"
+source = "git+https://github.com/Advanced-Programming-2023/Robotic-Lib.git#36861844d90a1fec175960b254784bc9926dd7b0"
 dependencies = [
  "lazy_static",
  "rand",
