@@ -29,7 +29,7 @@ impl Plugin for GUIPlugin{
             .add_systems(Update,update_points_update.in_set(MySet::Third))
             .add_systems(Update,update_feed.in_set(MySet::Third))
             .add_systems(Update,update_backpack.in_set(MySet::Third))
-            .add_systems(Update, crate::gui_overlay::update_backpack.in_set(MySet::Third));
+            .add_systems(Update,update_backpack_update.in_set(MySet::Third));
     }
 }
 fn create_gui(mut commands: Commands,game_data: Res<GameData>){
@@ -92,7 +92,7 @@ fn create_gui(mut commands: Commands,game_data: Res<GameData>){
         }),PointsUpdateComponent));
     commands.spawn((
         TextBundle::from_section(
-            "---BackPack---\n Water: 0\n Rock: 0\n Tree: 0\n Bush: 0\n JollyBlock: 0\n Garbage: 0\n Coin: 0\n Fish: 0\n---BackPack---",
+            "----BackPack----\n Water:0\n Rock:0\n Tree:0\n Bush:0\n JollyBlock:0   \n Garbage:0\n Coin:0\n Fish:0\n----BackPack----",
             TextStyle {
                 font_size: 20.0,
                 color: Color::rgb(0.0, 0.0, 0.0),
@@ -152,8 +152,9 @@ fn update_energy_update(mut energy_update_query: Query<&mut Text,With<EnergyUpda
             energy_update_text.sections[0].value = format!("{}", game_data.robot_data.energy_update);
         }
         game_data.robot_data.energy_update = 0;
+    }else {
+        energy_update_text.sections[0].style.color = Color::rgba(1.0, 1.0, 0.0, energy_update_text.sections[0].style.color.a() - (0.8 * time.delta_seconds()));
     }
-    energy_update_text.sections[0].style.color = Color::rgba(1.0, 1.0, 0.0, energy_update_text.sections[0].style.color.a() - (0.8 * time.delta_seconds()));
 }
 fn update_points(mut points_query: Query<&mut Text,With<PointsComponent>>,
                  mut game_data: ResMut<GameData>,
@@ -167,17 +168,16 @@ fn update_points_update(mut points_update_query: Query<&mut Text,With<PointsUpda
 ){
     let mut points_update_text = points_update_query.single_mut();
     if game_data.robot_data.points_update != 0.0{
+        points_update_text.sections[0].style.color = Color::rgba(0.5, 0.1, 0.5,1.0);
         if game_data.robot_data.points_update > 0.0{
             points_update_text.sections[0].value = format!("+{}", game_data.robot_data.points_update);
-            points_update_text.sections[0].style.color = Color::rgba(0.5, 0.1, 0.5,1.0);
         }else {
             points_update_text.sections[0].value = format!("-{}", game_data.robot_data.points_update);
-
         }
         game_data.robot_data.points_update = 0.0;
+    }else {
+        points_update_text.sections[0].style.color = Color::rgba(0.5, 0.1, 0.5, points_update_text.sections[0].style.color.a() - (0.8 * time.delta_seconds()));
     }
-    points_update_text.sections[0].style.color = Color::rgba(0.5, 0.1, 0.5, points_update_text.sections[0].style.color.a() - (0.8 * time.delta_seconds()));
-
 }
 fn update_feed(mut feed_query: Query<&mut Text,With<FeedComponent>>,
                    mut game_data: ResMut<GameData>,
@@ -214,7 +214,7 @@ fn update_backpack(mut back_pack_query: Query<&mut Text,With<BackPackComponent>>
         let bush = game_data.robot_data.back_pack.get(&Content::Bush(0)).unwrap();
         let garbage = game_data.robot_data.back_pack.get(&Content::Garbage(0)).unwrap();
         let coin = game_data.robot_data.back_pack.get(&Content::Coin(0)).unwrap();
-        back_pack_text.sections[0].value = format!("---BackPack---\n Water: {}\n Rock: {}\n Tree: {}\n Bush: {}\n JollyBlock: {}\n Garbage: {}\n Coin: {}\n Fish: {}\n---BackPack---", water, rock, tree, bush, jolly_block, garbage, coin, fish);
+        back_pack_text.sections[0].value = format!("----BackPack----\n Water:{}\n Rock:{}\n Tree:{}\n Bush:{}\n JollyBlock:{}   \n Garbage:{}\n Coin:{}\n Fish:{}\n----BackPack----", water, rock, tree, bush, jolly_block, garbage, coin, fish);
     }
 }
 fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackPackUpdateComponent>>,
@@ -225,16 +225,16 @@ fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackP
     if !game_data.robot_data.back_pack_visibility{
         back_pack_update_text.sections[0].value = format!("");
     }else {
-        let mut str = String::new();
+        let mut str = String::from("");
         let mut v = vec![];
         v.push(game_data.robot_data.back_pack_update.get(&Content::Water(0)).unwrap());
-        v.push(game_data.robot_data.back_pack_update.get(&Content::Tree(0)).unwrap());
         v.push(game_data.robot_data.back_pack_update.get(&Content::Rock(0)).unwrap());
-        v.push(game_data.robot_data.back_pack_update.get(&Content::Fish(0)).unwrap());
-        v.push(game_data.robot_data.back_pack_update.get(&Content::JollyBlock(0)).unwrap());
+        v.push(game_data.robot_data.back_pack_update.get(&Content::Tree(0)).unwrap());
         v.push(game_data.robot_data.back_pack_update.get(&Content::Bush(0)).unwrap());
+        v.push(game_data.robot_data.back_pack_update.get(&Content::JollyBlock(0)).unwrap());
         v.push(game_data.robot_data.back_pack_update.get(&Content::Garbage(0)).unwrap());
         v.push(game_data.robot_data.back_pack_update.get(&Content::Coin(0)).unwrap());
+        v.push(game_data.robot_data.back_pack_update.get(&Content::Fish(0)).unwrap());
 
         let mut update = false;
 
@@ -245,13 +245,23 @@ fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackP
             }else if *i < 0 {
                 str.push_str(format!("\n{}",i).as_str());
                 update = true;
+            }else {
+                str.push_str("\n");
             }
         }
-        back_pack_update_text.sections[0].value = str;
+        game_data.robot_data.back_pack_update.insert(Content::Water(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Tree(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Rock(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Fish(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::JollyBlock(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Bush(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Garbage(0), 0);
+        game_data.robot_data.back_pack_update.insert(Content::Coin(0), 0);
 
-        if update{
+        if update {
+            back_pack_update_text.sections[0].value = str;
             back_pack_update_text.sections[0].style.color = Color::rgba(0.0, 0.0, 0.0,1.0);
-        }else {
+        }else{
             back_pack_update_text.sections[0].style.color = Color::rgba(0.0, 0.0, 0.0, back_pack_update_text.sections[0].style.color.a() - (0.8 * time.delta_seconds()));
         }
     }
@@ -260,7 +270,4 @@ fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackP
 /*
 fn show_info(query: Query<Info,With<GUI>> ,keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
     //TODO (quando I sta venendo premuto faccio vedere le info oscurando il resto)
-}
-fn show_map(query: Query<Map,With<GUI>> ,keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
-    //TODO (quando M sta venendo premuto faccio vedere le info oscurando il resto) non so se ha senso
 }*/

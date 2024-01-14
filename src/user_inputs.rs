@@ -80,7 +80,7 @@ fn destroy_test(keyboard_input: Res<Input<KeyCode>>, mut game_update: ResMut<Gam
                     content: Content::Coin(1),
                     elevation: 0,
                 },
-                back_pack_update: vec![(Content::Tree(0),12)],
+                back_pack_update: vec![(Content::Garbage(0),12)],
                 coordinates: (0.0, 0.0),
                 energy: -110,
                 points: 500.0,
