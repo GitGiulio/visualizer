@@ -1,0 +1,10 @@
+C:\Users\giuli\RustroverProjects\visualizer\target\debug\deps\libowned_ttf_parser-097b4a68a14b40b0.rmeta: C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\lib.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\convert.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\owned.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\preparse.rs
+
+C:\Users\giuli\RustroverProjects\visualizer\target\debug\deps\libowned_ttf_parser-097b4a68a14b40b0.rlib: C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\lib.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\convert.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\owned.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\preparse.rs
+
+C:\Users\giuli\RustroverProjects\visualizer\target\debug\deps\owned_ttf_parser-097b4a68a14b40b0.d: C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\lib.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\convert.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\owned.rs C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\preparse.rs
+
+C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\lib.rs:
+C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\convert.rs:
+C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\owned.rs:
+C:\Users\giuli\.cargo\registry\src\index.crates.io-6f17d22bba15001f\owned_ttf_parser-0.20.0\src\preparse.rs:

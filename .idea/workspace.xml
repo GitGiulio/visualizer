@@ -3,6 +3,9 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,9 +29,14 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Cargo.Run.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
     "vue.rearranger.settings.migration": "true"
@@ -65,7 +73,7 @@
       <option name="presentableId" value="Default" />
       <updated>1705223102741</updated>
       <workItem from="1705223103923" duration="22000" />
-      <workItem from="1705223274608" duration="99000" />
+      <workItem from="1705223274608" duration="489000" />
     </task>
     <servers />
   </component>
