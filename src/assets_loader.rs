@@ -46,7 +46,7 @@ pub fn load_assets(mut scene_assets: ResMut<SceneAssets>, asset_server: Res<Asse
         robot:asset_server.load("robot.glb#Scene0"),
         grass:asset_server.load("grass.glb#Scene0"),
         sand:asset_server.load("sand.glb#Scene0"),
-        street:asset_server.load("street.glb#Scene0"), //TODO trovare / fare street
+        street:asset_server.load("street.glb#Scene0"),
         snow:asset_server.load("snow.glb#Scene0"),
         deep_water:asset_server.load("deep_water2.glb#Scene0"),
         shallow_water:asset_server.load("shallow_water2.glb#Scene0"),

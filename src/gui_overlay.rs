@@ -270,4 +270,5 @@ fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackP
 /*
 fn show_info(query: Query<Info,With<GUI>> ,keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
     //TODO (quando I sta venendo premuto faccio vedere le info oscurando il resto)
-}*/
+}
+*/
