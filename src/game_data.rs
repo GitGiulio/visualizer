@@ -120,7 +120,7 @@ impl Plugin for GameDataPlugin {
             )
             .insert_resource(ClearColor(Color::rgb(0.1,0.3,0.45)))
             .insert_resource(AmbientLight{
-                color: Default::default(),
+                color: Color::rgb(1.0, 1.0, 0.8),
                 brightness: 1.0,
             })
             .add_systems(Update, update_game_data.in_set(MySet::Second));

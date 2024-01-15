@@ -25,7 +25,7 @@ fn update_weather(mut light: ResMut<AmbientLight>,      // NON MI BASTA DEVO TRO
                 WeatherType::Sunny => {
                     new_brightness = 1.00;
                     clear_color.0 = Color::rgb(0.1,0.3,0.45); // bg color
-                    new_color_light = Color::rgb(0.8, 1.0, 0.8);
+                    new_color_light = Color::rgb(1.0, 1.0, 0.8);
                 }
                 WeatherType::Rainy => {
                     new_brightness = 0.75;

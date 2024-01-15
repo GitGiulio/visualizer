@@ -38,14 +38,13 @@ pub enum RobotAction {
     DiscoverTile{tile:Tile,coordinates:(f32,f32),energy:i32,points:f32},
     GainEnergy{energy:i32,points:f32},
     Teleport{destination:(f32,f32),destination_elevation:f32,energy:i32,points:f32},
-    Craft{/*TODO dati necessari*/energy:i32,points:f32},
-    Sell{/*TODO dati necessari*/energy:i32,points:f32},
-    Buy{/*TODO dati necessari*/energy:i32,points:f32},
-
+    Craft{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
+    Sell{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
+    Buy{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
 }
 #[derive(Resource,Debug)] /// OGNi VOLTA CHE CAMBIA QUALCOSA L'IA MI AGGIORNA QUESTA RESOURCE E IO HO TUTTO LI PRONTO
 pub struct GameUpdate{ //non so ancora bene come funziona rip
-    pub azioni: Vec<(RobotAction,WeatherType)>,
+    pub azioni: Vec<(RobotAction,WeatherType)>, //TODO cambiarae con Rc<RefCell<Vec<(RobotAction,WeatherType)>>> e provare a vedere se panica
 }
 
 pub struct VisualizerGLC{
@@ -92,7 +91,7 @@ impl VisualizerGLC{
 }
 
 fn main(){
-    let mut generator = rip_worldgenerator::MyWorldGen::new_param(450,2,3,3,false,false,4);
+    let mut generator = rip_worldgenerator::MyWorldGen::new_param(20,1,1,1,false,false,2);
 
     let mut mondo = generator.gen();
 
