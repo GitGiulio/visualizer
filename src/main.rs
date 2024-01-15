@@ -92,7 +92,7 @@ impl VisualizerGLC{
 }
 
 fn main(){
-    let mut generator = who_needs_gv_world_generator::WorldGenerator::new(50);
+    let mut generator = rip_worldgenerator::MyWorldGen::new_param(450,2,3,3,false,false,4);
 
     let mut mondo = generator.gen();
 
