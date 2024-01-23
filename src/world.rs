@@ -29,7 +29,7 @@ impl Plugin for WorldPlugin{
             .add_systems(Update, discover_tile.in_set(MySet::Third))
             .add_systems(Update,update_tile.in_set(MySet::Third))
             .add_systems(Update,update_content.in_set(MySet::Third))
-            .add_systems(Update,hide_content.in_set(MySet::Second))
+            .add_systems(Update, hide_content_under_robot.in_set(MySet::Second))
             .add_systems(Update, remove_game_update.in_set(MySet::Fourth));
     }
 }
@@ -523,20 +523,22 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
         }
     }
 }
-fn hide_content(mut content_query: Query<(&mut Transform,&mut Visibility),With<ContentComponent>>,
-                  mut game_data: ResMut<GameData>,
+fn hide_content_under_robot(mut content_query: Query<(&mut Transform, &mut Visibility),With<ContentComponent>>,
+                            mut game_data: ResMut<GameData>,
 ){
-    if (f32::floor(game_data.robot_data.robot_translation.x) != game_data.hided_content.0) || (f32::floor(game_data.robot_data.robot_translation.z) != game_data.hided_content.1) {
-        let mut new_hidden_content= (0.0,0.0);
-        for (mut transform,mut visibility) in content_query.iter_mut(){
-            if (f32::floor(transform.translation.x) == f32::floor(game_data.robot_data.robot_translation.x)) && (f32::floor(transform.translation.z) == f32::floor(game_data.robot_data.robot_translation.z)) {
-                new_hidden_content = (f32::floor(transform.translation.x),f32::floor(transform.translation.z));
-                *visibility = Visibility::Hidden;
-            }else if (f32::floor(transform.translation.x) == game_data.hided_content.0) && (f32::floor(transform.translation.z) == game_data.hided_content.1) {
-                *visibility = Visibility::Visible;
+    if game_data.content_visibility{
+        if (f32::floor(game_data.robot_data.robot_translation.x) != game_data.hided_content.0) || (f32::floor(game_data.robot_data.robot_translation.z) != game_data.hided_content.1) {
+            let mut new_hidden_content= (0.0,0.0);
+            for (mut transform,mut visibility) in content_query.iter_mut(){
+                if (f32::floor(transform.translation.x) == f32::floor(game_data.robot_data.robot_translation.x)) && (f32::floor(transform.translation.z) == f32::floor(game_data.robot_data.robot_translation.z)) {
+                    new_hidden_content = (f32::floor(transform.translation.x),f32::floor(transform.translation.z));
+                    *visibility = Visibility::Hidden;
+                }else if (f32::floor(transform.translation.x) == game_data.hided_content.0) && (f32::floor(transform.translation.z) == game_data.hided_content.1) {
+                    *visibility = Visibility::Visible;
+                }
             }
+            game_data.hided_content = new_hidden_content;
         }
-        game_data.hided_content = new_hidden_content;
     }
 }
 fn remove_game_update(mut game_update: ResMut<GameUpdate>,

@@ -10,7 +10,6 @@ mod game_data;
 
 use bevy::ecs::bundle::DynamicBundle;
 use bevy::prelude::*;
-use bevy::utils::HashMap;
 use robotics_lib::world::environmental_conditions::WeatherType;
 use robotics_lib::world::tile::{Content, Tile};
 use robotics_lib::world::tile::Content::*;
@@ -71,12 +70,13 @@ impl VisualizerGLC{
                 feed_visibility: true,
                 map_radius: 0.0,
                 hided_content: (0.0, 0.0),
+                content_visibility: true,
             })
             .insert_resource(GameUpdate {
                 azioni: robot_actions,
             })
             .add_plugins(DefaultPlugins)
-            //cose fatte da me
+            //plugins developed by Giulio Lo Cigno
             .add_plugins(AssetsLoaderPlugin)
             .add_plugins(WorldPlugin)
             .add_plugins(WeatherPlugin)
@@ -90,11 +90,16 @@ impl VisualizerGLC{
     }
 }
 
-fn main(){
-    let mut generator = rip_worldgenerator::MyWorldGen::new_param(20,1,1,1,false,false,2);
+fn main() {
+    let mut generator = rip_worldgenerator::MyWorldGen::new_param(50,1,1,1,false,false,2);
 
+    //let mut generator = who_needs_gv_world_generator::WorldGenerator::new(150);
+
+    // println!("e_seed {}", generator.get_e_seed()); //
+    // println!("m_seed {}", generator.get_m_seed()); // get the seeds so u can recreate the same tile_map later if you need
+    // println!("t_seed {}", generator.get_t_seed()); //
+//
     let mut mondo = generator.gen();
-
     VisualizerGLC::run(from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000);
 }
 

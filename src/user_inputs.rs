@@ -4,6 +4,7 @@ use robotics_lib::world::tile::*;
 use crate::GameUpdate;
 use crate::game_data::{GameData, MySet};
 use crate::RobotAction::UpdateTile;
+use crate::world::ContentComponent;
 
 pub struct InputPlugin;
 
@@ -13,6 +14,7 @@ impl Plugin for InputPlugin{
             .add_systems(Update,destroy_test.in_set(MySet::First))//<--- rimuovere
             .add_systems(Update,back_pack_show_hide.in_set(MySet::First))
             .add_systems(Update,map_show_hide.in_set(MySet::First))
+            .add_systems(Update,content_show_hide.in_set(MySet::First))
             .add_systems(Update,feed_show_hide.in_set(MySet::First));
     }
 }
@@ -61,7 +63,8 @@ fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Game
 
             game_data.camera_data.camera_mode = 3;
             game_data.camera_data.camera_direction = crate::Direction::Up;
-            game_data.camera_data.camera_transform = Transform::from_xyz(0.0,game_data.map_radius * 2.1,0.0).looking_at(Vec3::ZERO,Vec3::Z);
+            game_data.camera_data.camera_transform = Transform::from_xyz(0.0,game_data.map_radius * 1.5,0.0).looking_at(Vec3::ZERO,Vec3::Z);
+            game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.robot_data.robot_translation.x,game_data.map_radius * 1.5,game_data.robot_data.robot_translation.z).translation;
             game_data.camera_data.camera_velocity = Vec3::ZERO;
         }else {
             game_data.camera_data.camera_mode = game_data.camera_data.camera_mode_bu;
@@ -69,6 +72,24 @@ fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Game
             game_data.camera_data.camera_transform = game_data.camera_data.camera_transform_bu;
             game_data.camera_data.camera_velocity = game_data.camera_data.camera_velocity_bu;
         }
+    }
+}
+fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
+                     mut game_data: ResMut<GameData>,
+                    mut query: Query<&mut Visibility,With<ContentComponent>>,
+){ ///USER INPUT VERO///
+    if keyboard_input.just_pressed(KeyCode::P) {
+        if game_data.content_visibility{
+            for mut i in query.iter_mut(){
+                *i = Visibility::Hidden;
+            }
+            game_data.hided_content = (777777.0,777777.0);
+        }else {
+            for mut i in query.iter_mut(){
+                *i = Visibility::Visible;
+            }
+        }
+        game_data.content_visibility = !game_data.content_visibility;
     }
 }
 fn destroy_test(keyboard_input: Res<Input<KeyCode>>, mut game_update: ResMut<GameUpdate>){ // è solo per test, rimuovere

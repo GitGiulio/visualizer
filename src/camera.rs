@@ -37,16 +37,33 @@ fn change_camera(
     let mut camera_transform = camera_query.single_mut();
     if keyboard_input.just_pressed(KeyCode::C){
         if game_data.camera_data.camera_mode == 0 { //CAMERA 7 di TM con visione libera TODO mouse?
-            *camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 9.0, game_data.robot_data.robot_translation.z - 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
             game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 9.0, game_data.robot_data.robot_translation.z - 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+            *camera_transform = game_data.camera_data.camera_transform;
             game_data.camera_data.camera_mode = 1;
         }else if game_data.camera_data.camera_mode == 1{ //CAMERA 1 di TM già funzionante
-            *camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z - 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
-            game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z - 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
             game_data.camera_data.camera_mode = 2;
+            match game_data.camera_data.camera_direction {
+                Direction::Right => {
+                    game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x + 5.0, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+                    //game_data.camera_data.camera_transform.rotate_y(f32::to_radians(90.0));
+                }
+                Direction::Left => {
+                    game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x - 5.0, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+                    game_data.camera_data.camera_transform.rotate_y(f32::to_radians(90.0));
+                }
+                Direction::Up => {
+                    game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z - 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+                }
+                Direction::Down => {
+                    game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 7.0, game_data.robot_data.robot_translation.z + 5.0).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+                    //game_data.camera_data.camera_transform.rotate_y(f32::to_radians(180.0));
+                }
+            }
+            *camera_transform = game_data.camera_data.camera_transform;
+
         }else if game_data.camera_data.camera_mode == 2{ //CAMERA 1 di TM già funzionante TODO si bugga se quando la metti il robot è girato (fixare)
-            *camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 10.0, game_data.robot_data.robot_translation.z).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
             game_data.camera_data.camera_transform =  Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 10.0, game_data.robot_data.robot_translation.z).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z),Vec3::Z);
+            *camera_transform = game_data.camera_data.camera_transform;
             game_data.camera_data.camera_mode = 0;
         }
     }
@@ -144,8 +161,8 @@ fn camera_follow_robot(
                                         }
                                     }
                                     *camera_transform = game_data.camera_data.camera_transform;
-                                    game_data.camera_data.camera_direction = Direction::Right;
                                 }
+                                game_data.camera_data.camera_direction = Direction::Right;
                                 game_data.camera_data.camera_velocity = Vec3::new(-1.0,elevation/10.0,0.0);
                             }else {
                                 game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(camera_transform.translation.x - 1.0, camera_transform.translation.y + elevation/10.0, camera_transform.translation.z).translation;
@@ -163,8 +180,8 @@ fn camera_follow_robot(
                                             game_data.camera_data.camera_transform_bu.rotate_y(f32::to_radians(90.0));
                                         }
                                     }
-                                    game_data.camera_data.camera_direction_bu = Direction::Right;
                                 }
+                                game_data.camera_data.camera_direction_bu = Direction::Right;
                                 game_data.camera_data.camera_velocity_bu = Vec3::new(-1.0,elevation/10.0,0.0);
                             }
                         }
@@ -186,9 +203,9 @@ fn camera_follow_robot(
                                         }
                                     }
                                     *camera_transform = game_data.camera_data.camera_transform;
-                                    game_data.camera_data.camera_direction = Direction::Left;
                                 }
-                                    game_data.camera_data.camera_velocity = Vec3::new(1.0, elevation / 10.0, 0.0);
+                                game_data.camera_data.camera_direction = Direction::Left;
+                                game_data.camera_data.camera_velocity = Vec3::new(1.0, elevation / 10.0, 0.0);
                             }else {
                                 game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(camera_transform.translation.x + 1.0, camera_transform.translation.y + elevation/10.0, camera_transform.translation.z).translation;
                                 if game_data.camera_data.camera_mode_bu == 2{
@@ -205,8 +222,8 @@ fn camera_follow_robot(
                                             game_data.camera_data.camera_transform_bu.rotate_y(f32::to_radians(-90.0));
                                         }
                                     }
-                                    game_data.camera_data.camera_direction_bu = Direction::Left;
                                 }
+                                game_data.camera_data.camera_direction_bu = Direction::Left;
                                 game_data.camera_data.camera_velocity_bu = Vec3::new(1.0,elevation/10.0,0.0);
                             }
                         }
@@ -228,8 +245,8 @@ fn camera_follow_robot(
                                         }
                                     }
                                     *camera_transform = game_data.camera_data.camera_transform;
-                                    game_data.camera_data.camera_direction = Direction::Up;
                                 }
+                                game_data.camera_data.camera_direction = Direction::Up;
                                 game_data.camera_data.camera_velocity = Vec3::new(0.0, elevation / 10.0, 1.0);
                             }else {
                                 game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(camera_transform.translation.x, camera_transform.translation.y + elevation/10.0, camera_transform.translation.z + 1.0).translation;
@@ -247,8 +264,8 @@ fn camera_follow_robot(
                                             game_data.camera_data.camera_transform_bu.rotate_y(f32::to_radians(180.0));
                                         }
                                     }
-                                    game_data.camera_data.camera_direction_bu = Direction::Up;
                                 }
+                                game_data.camera_data.camera_direction_bu = Direction::Up;
                                 game_data.camera_data.camera_velocity_bu = Vec3::new(0.0,elevation/10.0,1.0);
                             }
                         }
@@ -270,8 +287,8 @@ fn camera_follow_robot(
                                         Direction::Down => {}
                                     }
                                     *camera_transform = game_data.camera_data.camera_transform;
-                                    game_data.camera_data.camera_direction = Direction::Down;
                                 }
+                                game_data.camera_data.camera_direction = Direction::Down;
                                 game_data.camera_data.camera_velocity = Vec3::new(0.0,elevation/10.0,-1.0);
                             }else {
                                 game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(camera_transform.translation.x, camera_transform.translation.y + elevation/10.0, camera_transform.translation.z - 1.0).translation;
@@ -289,8 +306,8 @@ fn camera_follow_robot(
                                         }
                                         Direction::Down => {}
                                     }
-                                    game_data.camera_data.camera_direction_bu = Direction::Down;
                                 }
+                                game_data.camera_data.camera_direction_bu = Direction::Down;
                                 game_data.camera_data.camera_velocity_bu = Vec3::new(0.0,elevation/10.0,-1.0);
                             }
                         }

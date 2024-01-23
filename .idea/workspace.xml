@@ -16,9 +16,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game_data.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_data.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/weather.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/weather.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user_inputs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_inputs.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +45,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Cargo.Run visualizer_lo_cigno_giulio.executor&quot;: &quot;Run&quot;,
     &quot;Cargo.Run.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
@@ -62,7 +64,24 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Cargo.Run visualizer_lo_cigno_giulio">
+    <configuration name="Run visualizer_lo_cigno_giulio" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package visualizer_lo_cigno_giulio --bin visualizer_lo_cigno_giulio" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
       <option name="command" value="run" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -80,6 +99,11 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Run visualizer_lo_cigno_giulio" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -104,7 +128,20 @@
       <workItem from="1705314510422" duration="619000" />
       <workItem from="1705315838411" duration="2000" />
       <workItem from="1705315851134" duration="103000" />
-      <workItem from="1705318678238" duration="1213000" />
+      <workItem from="1705318678238" duration="1527000" />
+      <workItem from="1705484115340" duration="369000" />
+      <workItem from="1705484856796" duration="602000" />
+      <workItem from="1705487206162" duration="246000" />
+      <workItem from="1705502520349" duration="5012000" />
+      <workItem from="1705507747294" duration="476000" />
+      <workItem from="1705572953677" duration="6000" />
+      <workItem from="1705916450908" duration="413000" />
+      <workItem from="1705931983943" duration="3033000" />
+      <workItem from="1706002019916" duration="1435000" />
+      <workItem from="1706003726260" duration="1486000" />
+      <workItem from="1706010048908" duration="761000" />
+      <workItem from="1706010893450" duration="8000" />
+      <workItem from="1706010931082" duration="7000" />
     </task>
     <servers />
   </component>
