@@ -72,10 +72,10 @@ fn create_world(mut commands: Commands,
                 }
                 match tile.content {
                     Rock(n) => {
-                        if n < 5 {
+                        if n < 2 {
                             content_scene = scene_assets.rock1.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.12,0.12,0.12)).scale;
-                        }else if n<12 {
+                        }else if n < 3 {
                             content_scene = scene_assets.rock2.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.18,0.18,0.18)).scale;
                         }else {
@@ -84,10 +84,10 @@ fn create_world(mut commands: Commands,
                         }
                     }
                     Tree(n) => {
-                        if n < 5 {
+                        if n < 2 {
                             content_scene = scene_assets.tree1.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.09,0.09,0.09)).scale;
-                        }else if n<12 {
+                        }else if n < 4 {
                             content_scene = scene_assets.tree2.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.08,0.08,0.08)).scale;
                         }else {
@@ -231,7 +231,7 @@ fn discover_tile(mut commands: Commands,
                         if n < 2 {
                             content_scene = scene_assets.rock1.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.12,0.12,0.12)).scale;
-                        }else if n < 4 {
+                        }else if n < 3 {
                             content_scene = scene_assets.rock2.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.18,0.18,0.18)).scale;
                         }else {
@@ -430,7 +430,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                     if n < 2 {
                                         *content_scene = scene_assets.rock1.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.12,0.12,0.12)).scale;
-                                    }else if n < 4 {
+                                    }else if n < 3 {
                                         *content_scene = scene_assets.rock2.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.18,0.18,0.18)).scale;
                                     }else {
