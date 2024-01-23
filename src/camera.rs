@@ -68,29 +68,31 @@ fn change_camera(
         }
     }
     if keyboard_input.pressed(KeyCode::V) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.y += 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.y += 18.0 * time.delta_seconds();
+        camera_transform.translation.y += 12.0 * time.delta_seconds();
     }
     if keyboard_input.pressed(KeyCode::X) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.y -= 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.y -= 18.0 * time.delta_seconds();
+        camera_transform.translation.y -= 12.0 * time.delta_seconds();
     }
     if keyboard_input.pressed(KeyCode::K) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.x -= 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.x -= 18.0 * time.delta_seconds();
+        camera_transform.translation.x -= 12.0 * time.delta_seconds();
     }
     if keyboard_input.pressed(KeyCode::H) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.x += 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.x += 18.0 * time.delta_seconds();
+        camera_transform.translation.x += 12.0 * time.delta_seconds();
     }
     if keyboard_input.pressed(KeyCode::U) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.z += 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.z += 18.0 * time.delta_seconds();
+        camera_transform.translation.z += 12.0 * time.delta_seconds();
     }
     if keyboard_input.pressed(KeyCode::J) && (game_data.camera_data.camera_mode == 0 || game_data.camera_data.camera_mode == 3){
-        camera_transform.translation.z -= 18.0 * time.delta_seconds();
-        game_data.camera_data.camera_transform.translation.z -= 18.0 * time.delta_seconds();
+        camera_transform.translation.z -= 12.0 * time.delta_seconds();
     }
+    if keyboard_input.pressed(KeyCode::Y) && game_data.camera_data.camera_mode == 0 {
+        camera_transform.rotate_x(f32::to_degrees(1.0));
+    }
+    if keyboard_input.pressed(KeyCode::I) && game_data.camera_data.camera_mode == 0{
+        camera_transform.rotate_x(f32::to_degrees(1.0));
+    }
+    game_data.camera_data.camera_transform = *camera_transform;
+
 }
 fn camera_follow_mouse(
     mut camera_query: Query<(&Camera, &mut GlobalTransform),With<Camera3DComponent>>,

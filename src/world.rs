@@ -52,7 +52,7 @@ fn create_world(mut commands: Commands,
                 let mut tile_scale = Transform::from_scale(Vec3::new(0.5,0.5,0.5)).scale;
                 let mut content_scene;
                 let mut content_transform = Transform{
-                    translation: Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 1.0 ,coordinates.1).translation,
+                    translation: Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation,
                     rotation: Default::default(),
                     scale: Transform::from_scale(Vec3::new(0.1,0.1,0.1)).scale,
                 };
@@ -110,6 +110,7 @@ fn create_world(mut commands: Commands,
                     Bin(_) => {
                         content_scene = scene_assets.bin.clone(); //TODO non mi piace troppo la resa
                         content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
+                        content_transform.translation.y += 0.5;
                     }
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
@@ -117,7 +118,7 @@ fn create_world(mut commands: Commands,
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
-                        content_transform.scale = Transform::from_scale(Vec3::new(2.0,2.0,2.0)).scale;
+                        content_transform.scale = Transform::from_scale(Vec3::new(0.01,0.01,0.01)).scale;
                     }
                     Water(_) => {
                         content_scene = Default::default();
@@ -129,12 +130,10 @@ fn create_world(mut commands: Commands,
                     Fish(_) => {
                         content_scene = scene_assets.fish.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.02,0.02,0.02)).scale;
-                        content_transform.translation = Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                     }
                     Building => {
                         content_scene = scene_assets.building.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.007,0.007,0.007)).scale;
-                        content_transform.translation = Transform::from_xyz(coordinates.0 - 1.0,(tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                     }
                     Bush(_) => {
                         content_scene = scene_assets.bush.clone();
@@ -209,7 +208,7 @@ fn discover_tile(mut commands: Commands,
                 let mut tile_scale = Transform::from_scale(Vec3::new(0.5,0.5,0.5)).scale;
                 let mut content_scene;
                 let mut content_transform = Transform{
-                    translation: Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 1.0 ,coordinates.1).translation,
+                    translation: Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 2.0 ,coordinates.1).translation,
                     rotation: Default::default(),
                     scale: Transform::from_scale(Vec3::new(0.1,0.1,0.1)).scale,
                 };
@@ -229,10 +228,10 @@ fn discover_tile(mut commands: Commands,
                 }
                 match tile.content {
                     Rock(n) => {
-                        if n < 5 {
+                        if n < 2 {
                             content_scene = scene_assets.rock1.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.12,0.12,0.12)).scale;
-                        }else if n<12 {
+                        }else if n < 4 {
                             content_scene = scene_assets.rock2.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.18,0.18,0.18)).scale;
                         }else {
@@ -241,10 +240,10 @@ fn discover_tile(mut commands: Commands,
                         }
                     }
                     Tree(n) => {
-                        if n < 5 {
+                        if n < 2 {
                             content_scene = scene_assets.tree1.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.09,0.09,0.09)).scale;
-                        }else if n<12 {
+                        }else if n < 4 {
                             content_scene = scene_assets.tree2.clone();
                             content_transform.scale = Transform::from_scale(Vec3::new(0.08,0.08,0.08)).scale;
                         }else {
@@ -267,6 +266,7 @@ fn discover_tile(mut commands: Commands,
                     Bin(_) => {
                         content_scene = scene_assets.bin.clone(); //TODO non mi piace troppo la resa
                         content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
+                        content_transform.translation.y += 0.5;
                     }
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
@@ -274,7 +274,7 @@ fn discover_tile(mut commands: Commands,
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
-                        content_transform.scale = Transform::from_scale(Vec3::new(2.0,2.0,2.0)).scale;
+                        content_transform.scale = Transform::from_scale(Vec3::new(0.0001,0.0001,0.0001)).scale;
                     }
                     Water(_) => {
                         content_scene = Default::default();
@@ -286,12 +286,10 @@ fn discover_tile(mut commands: Commands,
                     Fish(_) => {
                         content_scene = scene_assets.fish.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.02,0.02,0.02)).scale;
-                        content_transform.translation = Transform::from_xyz(coordinates.0,(tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                     }
                     Building => {
                         content_scene = scene_assets.building.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.007,0.007,0.007)).scale;
-                        content_transform.translation = Transform::from_xyz(coordinates.0 - 1.0,(tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                     }
                     Bush(_) => {
                         content_scene = scene_assets.bush.clone();
@@ -429,10 +427,10 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                         if content_transform.translation.x == coordinates.0 && content_transform.translation.z == coordinates.1{
                             match new_tile.content {
                                 Rock(n) => {
-                                    if n < 5 {
+                                    if n < 2 {
                                         *content_scene = scene_assets.rock1.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.12,0.12,0.12)).scale;
-                                    }else if n<12 {
+                                    }else if n < 4 {
                                         *content_scene = scene_assets.rock2.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.18,0.18,0.18)).scale;
                                     }else {
@@ -441,10 +439,10 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                     }
                                 }
                                 Tree(n) => {
-                                    if n < 5 {
+                                    if n < 2 {
                                         *content_scene = scene_assets.tree1.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.09,0.09,0.09)).scale;
-                                    }else if n<12 {
+                                    }else if n < 4 {
                                         *content_scene = scene_assets.tree2.clone();
                                         content_transform.scale = Transform::from_scale(Vec3::new(0.08,0.08,0.08)).scale;
                                     }else {
@@ -467,6 +465,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Bin(_) => {
                                     *content_scene = scene_assets.bin.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
+                                    content_transform.translation.y += 0.5;
                                 }
                                 Crate(_) => {
                                     *content_scene = scene_assets.crate_.clone();
@@ -486,27 +485,22 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Fish(_) => {
                                     *content_scene = scene_assets.fish.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.02,0.02,0.02)).scale;
-                                    content_transform.translation = Transform::from_xyz(coordinates.0,(new_tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                                 }
                                 Building => {
                                     *content_scene = scene_assets.building.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.007,0.007,0.007)).scale;
-                                    content_transform.translation = Transform::from_xyz(coordinates.0 - 1.0,(new_tile.elevation as f32 / 10.0) - 1.5 ,coordinates.1).translation;
                                 }
                                 Bush(_) => {
                                     *content_scene = scene_assets.bush.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.3,0.3,0.3)).scale;
-
                                 }
                                 JollyBlock(_) => {
                                     *content_scene = scene_assets.jolly_block.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
-
                                 }
                                 Scarecrow => {
                                     *content_scene = scene_assets.scarecrow.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.3,0.3,0.3)).scale;
-
                                 }
                                 None => {
                                     *content_scene = Default::default();

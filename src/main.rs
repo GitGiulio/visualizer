@@ -52,7 +52,7 @@ impl VisualizerGLC{
     pub fn run( robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize){
         let mut robot_data = RobotData::new();
         robot_data.energy = energy as i32;
-        robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0,robot_spawn.1 as f32)).translation;
+        robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0 - 0.45,robot_spawn.1 as f32)).translation;
         let mut camera_data= CameraData::new();
         camera_data.camera_transform = Transform::from_translation(Vec3::new(0.0,10.0,0.0)).looking_at(Vec3::ZERO,Vec3::Z);
         camera_data.camera_transform.translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,(robot_elevation as f32 /10.0) + 10.0,robot_spawn.1 as f32)).translation;
@@ -91,7 +91,7 @@ impl VisualizerGLC{
 }
 
 fn main() {
-    let mut generator = rip_worldgenerator::MyWorldGen::new_param(50,1,1,1,false,false,2);
+    let mut generator = rip_worldgenerator::MyWorldGen::new_param(100,1,1,1,false,false,4);
 
     //let mut generator = who_needs_gv_world_generator::WorldGenerator::new(150);
 
