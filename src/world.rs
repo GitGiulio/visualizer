@@ -122,6 +122,9 @@ fn create_world(mut commands: Commands,
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.01,0.01,0.01)).scale;
                     }
+                    Water(_) => {
+                        content_scene = Default::default();
+                    }
                     Market(_) => {
                         content_scene = scene_assets.market.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
@@ -276,6 +279,9 @@ fn discover_tile(mut commands: Commands,
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.0001,0.0001,0.0001)).scale;
+                    }
+                    Water(_) => {
+                        content_scene = Default::default();
                     }
                     Market(_) => {
                         content_scene = scene_assets.market.clone();
@@ -474,6 +480,9 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Bank(_) => {
                                     *content_scene = scene_assets.bank.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.1,0.1,0.1)).scale;
+                                }
+                                Water(_) => {
+                                    *content_scene = Default::default();
                                 }
                                 Market(_) => {
                                     *content_scene = scene_assets.market.clone();
