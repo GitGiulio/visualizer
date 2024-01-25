@@ -14,7 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/camera.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +154,7 @@
       <workItem from="1706013971938" duration="4682000" />
       <workItem from="1706020655619" duration="4851000" />
       <workItem from="1706107304302" duration="485000" />
-      <workItem from="1706177224232" duration="6581000" />
+      <workItem from="1706177224232" duration="6990000" />
     </task>
     <servers />
   </component>

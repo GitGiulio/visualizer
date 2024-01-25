@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.12.1"
-rip_worldgenerator = {version = "0.5.43", registry = "kellnr"}
+rip_worldgenerator = {version = "0.5.45", registry = "kellnr"}
 #who_needs_gv_world_generator = {version = "0.1.7", registry = "kellnr"}
 oxagaudiotool = {version = "0.2.0", registry = "kellnr"}
 #who_needs_gv_world_generator = {git = "https://github.com/Advanced-Programming-Carasau-Project/world_generator.git"}

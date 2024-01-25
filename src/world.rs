@@ -102,6 +102,7 @@ fn create_world(mut commands: Commands,
                     Fire => {
                         content_scene = scene_assets.fire.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
+                        content_transform.translation.y += 0.25;
                     }
                     Coin(_) => {
                         content_scene = scene_assets.coin.clone();
@@ -110,18 +111,16 @@ fn create_world(mut commands: Commands,
                     Bin(_) => {
                         content_scene = scene_assets.bin.clone(); //TODO non mi piace troppo la resa
                         content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
-                        content_transform.translation.y += 0.5;
+                        content_transform.translation.y += 0.45;
                     }
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
+                        content_transform.translation.y += 0.45;
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.01,0.01,0.01)).scale;
-                    }
-                    Water(_) => {
-                        content_scene = Default::default();
                     }
                     Market(_) => {
                         content_scene = scene_assets.market.clone();
@@ -258,6 +257,7 @@ fn discover_tile(mut commands: Commands,
                     Fire => {
                         content_scene = scene_assets.fire.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
+                        content_transform.translation.y += 0.25;
                     }
                     Coin(_) => {
                         content_scene = scene_assets.coin.clone();
@@ -266,18 +266,16 @@ fn discover_tile(mut commands: Commands,
                     Bin(_) => {
                         content_scene = scene_assets.bin.clone(); //TODO non mi piace troppo la resa
                         content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
-                        content_transform.translation.y += 0.5;
+                        content_transform.translation.y += 0.45;
                     }
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
+                        content_transform.translation.y += 0.45;
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.0001,0.0001,0.0001)).scale;
-                    }
-                    Water(_) => {
-                        content_scene = Default::default();
                     }
                     Market(_) => {
                         content_scene = scene_assets.market.clone();
@@ -457,6 +455,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Fire => {
                                     *content_scene = scene_assets.fire.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
+                                    content_transform.translation.y += 0.25;
                                 }
                                 Coin(_) => {
                                     *content_scene = scene_assets.coin.clone();
@@ -465,18 +464,16 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Bin(_) => {
                                     *content_scene = scene_assets.bin.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.4,0.4,0.4)).scale;
-                                    content_transform.translation.y += 0.5;
+                                    content_transform.translation.y += 0.45;
                                 }
                                 Crate(_) => {
                                     *content_scene = scene_assets.crate_.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
+                                    content_transform.translation.y += 0.45;
                                 }
                                 Bank(_) => {
                                     *content_scene = scene_assets.bank.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.1,0.1,0.1)).scale;
-                                }
-                                Water(_) => {
-                                    *content_scene = Default::default();
                                 }
                                 Market(_) => {
                                     *content_scene = scene_assets.market.clone();
