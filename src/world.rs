@@ -102,7 +102,7 @@ fn create_world(mut commands: Commands,
                     Fire => {
                         content_scene = scene_assets.fire.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
-                        content_transform.translation.y += 0.25;
+                        content_transform.translation.y += 0.05;
                     }
                     Coin(_) => {
                         content_scene = scene_assets.coin.clone();
@@ -116,7 +116,7 @@ fn create_world(mut commands: Commands,
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
-                        content_transform.translation.y += 0.45;
+                        content_transform.translation.y += 0.15;
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
@@ -260,7 +260,7 @@ fn discover_tile(mut commands: Commands,
                     Fire => {
                         content_scene = scene_assets.fire.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
-                        content_transform.translation.y += 0.25;
+                        content_transform.translation.y += 0.05;
                     }
                     Coin(_) => {
                         content_scene = scene_assets.coin.clone();
@@ -274,7 +274,7 @@ fn discover_tile(mut commands: Commands,
                     Crate(_) => {
                         content_scene = scene_assets.crate_.clone();
                         content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
-                        content_transform.translation.y += 0.45;
+                        content_transform.translation.y += 0.15;
                     }
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
@@ -461,7 +461,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Fire => {
                                     *content_scene = scene_assets.fire.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.7,0.7,0.7)).scale;
-                                    content_transform.translation.y += 0.25;
+                                    content_transform.translation.y += 0.05;
                                 }
                                 Coin(_) => {
                                     *content_scene = scene_assets.coin.clone();
@@ -475,7 +475,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Crate(_) => {
                                     *content_scene = scene_assets.crate_.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.2,0.2,0.2)).scale;
-                                    content_transform.translation.y += 0.45;
+                                    content_transform.translation.y += 0.15;
                                 }
                                 Bank(_) => {
                                     *content_scene = scene_assets.bank.clone();

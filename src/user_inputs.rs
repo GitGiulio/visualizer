@@ -55,6 +55,7 @@ fn feed_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Gam
 }
 fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
     if keyboard_input.just_pressed(KeyCode::M) {
+        info!("MAPPAPAAAA");
         if game_data.camera_data.camera_mode != 3{
             game_data.camera_data.camera_mode_bu = game_data.camera_data.camera_mode;
             game_data.camera_data.camera_direction_bu = game_data.camera_data.camera_direction.clone();
