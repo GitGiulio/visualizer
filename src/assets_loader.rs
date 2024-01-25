@@ -25,7 +25,6 @@ pub struct SceneAssets{
     pub bin:Handle<Scene>,
     pub crate_:Handle<Scene>,
     pub bank:Handle<Scene>,
-    pub water:Handle<Scene>,
     pub market:Handle<Scene>,
     pub fish:Handle<Scene>,
     pub building:Handle<Scene>,
@@ -67,9 +66,8 @@ pub fn load_assets(mut scene_assets: ResMut<SceneAssets>, asset_server: Res<Asse
         bin:asset_server.load("bin.glb#Scene0"),
         crate_:asset_server.load("crate.glb#Scene0"),
         bank:asset_server.load("bank.glb#Scene0"),
-        water:asset_server.load("Blank block.glb#Scene0"), //TODO direi che non serve ma non sono sicuro
         market:asset_server.load("market.glb#Scene0"),
-        fish:asset_server.load("fish.glb#Scene0"), //TODO magari mettre un "acqua con pesce"
+        fish:asset_server.load("fish.glb#Scene0"),
         building:asset_server.load("building.glb#Scene0"),
         bush:asset_server.load("bush.glb#Scene0"),
         jolly_block:asset_server.load("jolly_block.glb#Scene0"),

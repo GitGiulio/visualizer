@@ -7,6 +7,7 @@ mod assets_loader;
 mod gui_overlay;
 mod movement;
 mod game_data;
+mod rudimental_a_i;
 
 use bevy::ecs::bundle::DynamicBundle;
 use bevy::prelude::*;
@@ -20,6 +21,7 @@ use crate::game_data::{CameraData, GameData, GameDataPlugin, RobotData};
 use crate::gui_overlay::GUIPlugin;
 use crate::movement::MovementPlugin;
 use crate::robot::RobotPlugin;
+use crate::rudimental_a_i::ArtificialIntelligencePlugin;
 use crate::user_inputs::InputPlugin;
 use crate::weather::WeatherPlugin;
 use crate::world::WorldPlugin;
@@ -49,7 +51,7 @@ pub struct GameUpdate{ //non so ancora bene come funziona rip
 pub struct VisualizerGLC{
 }
 impl VisualizerGLC{
-    pub fn run( robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize){
+    pub fn run<T:AI + Resource>(artificial_intelligence: T, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize){
         let mut robot_data = RobotData::new();
         robot_data.energy = energy as i32;
         robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0 - 0.45,robot_spawn.1 as f32)).translation;
@@ -72,6 +74,7 @@ impl VisualizerGLC{
                 hided_content: (0.0, 0.0),
                 content_visibility: true,
             })
+            .insert_resource( artificial_intelligence)
             .insert_resource(GameUpdate {
                 azioni: robot_actions,
             })
@@ -89,6 +92,19 @@ impl VisualizerGLC{
             .run();
     }
 }
+pub trait AI{
+    fn next(&mut self)->Vec<(RobotAction,WeatherType)>;
+}
+
+#[derive(Resource,Debug)]
+pub struct TestAI{
+    dati:bool,
+}
+impl AI for TestAI{
+    fn next(&mut self) -> Vec<(RobotAction, WeatherType)> {
+        return vec![];
+    }
+}
 
 fn main() {
     let mut generator = rip_worldgenerator::MyWorldGen::new_param(100,1,1,1,false,false,4);
@@ -99,8 +115,10 @@ fn main() {
     // println!("m_seed {}", generator.get_m_seed()); // get the seeds so u can recreate the same tile_map later if you need
     // println!("t_seed {}", generator.get_t_seed()); //
 //
+
+    let mut test_a_i = TestAI{ dati:true};
     let mut mondo = generator.gen();
-    VisualizerGLC::run(from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000);
+    VisualizerGLC::run(test_a_i,from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000);
 }
 
 fn from_map_to_action_vec(map:Vec<Vec<Tile>>)->Vec<(RobotAction,WeatherType)>{

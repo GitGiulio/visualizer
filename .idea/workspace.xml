@@ -13,8 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/rudimental_a_i.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/world.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +25,13 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -145,7 +154,9 @@
       <workItem from="1706011306352" duration="1262000" />
       <workItem from="1706012725765" duration="23000" />
       <workItem from="1706013971938" duration="4682000" />
-      <workItem from="1706020655619" duration="1774000" />
+      <workItem from="1706020655619" duration="4851000" />
+      <workItem from="1706107304302" duration="485000" />
+      <workItem from="1706177224232" duration="2220000" />
     </task>
     <servers />
   </component>
