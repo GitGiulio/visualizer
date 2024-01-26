@@ -1,5 +1,8 @@
 use bevy::prelude::*;
+use bevy::sprite::{Anchor, MaterialMesh2dBundle};
+use bevy::ui::widget::UiImageSize;
 use robotics_lib::world::tile::Content;
+use crate::assets_loader::ImageAssets;
 use crate::game_data::{GameData, MySet};
 use crate::RobotAction::*;
 
@@ -32,7 +35,12 @@ impl Plugin for GUIPlugin{
             .add_systems(Update,update_backpack_update.in_set(MySet::Third));
     }
 }
-fn create_gui(mut commands: Commands,game_data: Res<GameData>){
+fn create_gui(mut commands: Commands,
+              game_data: Res<GameData>,
+              image_assets: Res<ImageAssets>,
+              mut meshes: ResMut<Assets<Mesh>>,
+              mut materials: ResMut<Assets<ColorMaterial>>,
+){
     let energy_string = format!("Energy: {}",game_data.robot_data.energy);
     commands.spawn((
         TextBundle::from_section(
@@ -64,7 +72,7 @@ fn create_gui(mut commands: Commands,game_data: Res<GameData>){
         }),EnergyUpdateComponent));
     commands.spawn((
         TextBundle::from_section(
-            "Points: 0",
+            format!("Points: 0/{}",game_data.max_points),
             TextStyle {
                 font_size: 30.0,
                 color: Color::rgb(0.5, 0.1, 0.5),
@@ -132,6 +140,153 @@ fn create_gui(mut commands: Commands,game_data: Res<GameData>){
             right: Val::Px(5.0),
             ..default()
         }),FeedComponent));
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.water.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(25.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.rock.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(47.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.tree.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(69.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.bush.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(91.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.jolly_block.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(113.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.garbage.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(135.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.coin.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(157.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.fish.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(179.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.fish.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(179.0),
+                right: Val::Px(75.0),
+                width: Val::Px(22.0),
+                height: Val::Px(22.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        (ImageBundle {
+            image: image_assets.fish.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(5.0),
+                left: Val::Px(5.0),
+                width: Val::Px(150.0),
+                height: Val::Px(75.0),
+                ..default()
+            },
+            ..default()
+        },
+        EnergyComponent
+        ));
+    commands.spawn(
+        (ImageBundle {
+            image: image_assets.fish.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(5.0),
+                left: Val::Px(5.0),
+                width: Val::Px(150.0),
+                height: Val::Px(75.0),
+                ..default()
+            },
+            ..default()
+        },
+        PointsComponent
+    ));
 }
 fn update_energy(mut energy_query: Query<&mut Text,With<EnergyComponent>>,
                  mut game_data: ResMut<GameData>,
@@ -160,7 +315,7 @@ fn update_points(mut points_query: Query<&mut Text,With<PointsComponent>>,
                  mut game_data: ResMut<GameData>,
 ){
     let mut points_text = points_query.single_mut();
-    points_text.sections[0].value = format!("Points: {}", game_data.robot_data.points);
+    points_text.sections[0].value = format!("Points: {}/{}",game_data.robot_data.points,game_data.max_points);
 }
 fn update_points_update(mut points_update_query: Query<&mut Text,With<PointsUpdateComponent>>,
                         mut game_data: ResMut<GameData>,

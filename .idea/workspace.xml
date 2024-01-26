@@ -13,6 +13,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/textures/bush.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/coin1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/coin2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/fish.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/garbage.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/rock.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/teleport.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/tree.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/water.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_data.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_data.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_overlay.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_overlay.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/world.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,6 +82,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\giuli\RustroverProjects\visualizer\assets\textures" />
       <recent name="C:\Users\giuli\RustroverProjects\visualizer\assets" />
     </key>
   </component>
@@ -153,7 +169,9 @@
       <workItem from="1706013971938" duration="4682000" />
       <workItem from="1706020655619" duration="4851000" />
       <workItem from="1706107304302" duration="485000" />
-      <workItem from="1706177224232" duration="7458000" />
+      <workItem from="1706177224232" duration="7821000" />
+      <workItem from="1706202066647" duration="3509000" />
+      <workItem from="1706256961804" duration="2998000" />
     </task>
     <servers />
   </component>

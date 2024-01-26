@@ -2988,9 +2988,9 @@ dependencies = [
 
 [[package]]
 name = "rip_worldgenerator"
-version = "0.5.44"
+version = "0.5.45"
 source = "sparse+https://advancedprogramming.disi.unitn.it/api/v1/crates/"
-checksum = "e16d8fc83df6885548838643864e515dc6c86f7300e84396297dc0e0a37c9d8a"
+checksum = "1f2bfad2989a5b6e0877f29532fe831dde1a1235c6f1dbf3bfbc34b4b30f683f"
 dependencies = [
  "disjoint-sets",
  "dsu-tree",

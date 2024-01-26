@@ -84,6 +84,7 @@ pub(crate) struct GameData{
     pub(crate) map_radius:f32,
     pub(crate) hided_content:(f32,f32),
     pub(crate) content_visibility:bool,
+    pub(crate) max_points:f32,
 }
 impl GameData{
     pub fn get_autoplay(&self)->bool{

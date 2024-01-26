@@ -51,7 +51,7 @@ pub struct GameUpdate{ //non so ancora bene come funziona rip
 pub struct VisualizerGLC{
 }
 impl VisualizerGLC{
-    pub fn run<T:AI + Resource>(artificial_intelligence: T, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize){
+    pub fn run<T:AI + Resource>(artificial_intelligence: T, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize,max_points:f32){
         let mut robot_data = RobotData::new();
         robot_data.energy = energy as i32;
         robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0 - 0.45,robot_spawn.1 as f32)).translation;
@@ -73,6 +73,7 @@ impl VisualizerGLC{
                 map_radius: 0.0,
                 hided_content: (0.0, 0.0),
                 content_visibility: true,
+                max_points,
             })
             .insert_resource( artificial_intelligence)
             .insert_resource(GameUpdate {
@@ -118,10 +119,10 @@ fn main() {
 
     let mut test_a_i = TestAI{ dati:true};
     let mut mondo = generator.gen();
-    VisualizerGLC::run(test_a_i,from_map_to_action_vec(mondo.0.clone()),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000);
+    VisualizerGLC::run(test_a_i,from_map_to_action_vec(&mondo.0),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000,mondo.3);
 }
 
-fn from_map_to_action_vec(map:Vec<Vec<Tile>>)->Vec<(RobotAction,WeatherType)>{
+fn from_map_to_action_vec(map: &Vec<Vec<Tile>>)->Vec<(RobotAction,WeatherType)>{
     let mut r = vec![];
     for i in 0..map.len(){
         for j in 0..map.len(){

@@ -32,12 +32,24 @@ pub struct SceneAssets{
     pub jolly_block:Handle<Scene>,
     pub scarecrow:Handle<Scene>,
 }
+#[derive(Resource,Debug,Default)]
+pub struct ImageAssets{
+    pub coin:Handle<Image>,
+    pub tree:Handle<Image>,
+    pub rock:Handle<Image>,
+    pub garbage:Handle<Image>,
+    pub jolly_block:Handle<Image>,
+    pub fish:Handle<Image>,
+    pub water:Handle<Image>,
+    pub bush:Handle<Image>,
+}
 pub struct AssetsLoaderPlugin;
 
 impl Plugin for AssetsLoaderPlugin{
     fn build(&self, app: &mut App) {
         app.init_resource::<SceneAssets>().add_systems(Startup,load_assets)
-            .add_systems(Startup,load_mesh_material);
+            .add_systems(Startup,load_mesh_material)
+            .init_resource::<ImageAssets>().add_systems(Startup,load_images);
     }
 }
 pub fn load_assets(mut scene_assets: ResMut<SceneAssets>, asset_server: Res<AssetServer>){
@@ -72,6 +84,18 @@ pub fn load_assets(mut scene_assets: ResMut<SceneAssets>, asset_server: Res<Asse
         bush:asset_server.load("bush.glb#Scene0"),
         jolly_block:asset_server.load("jolly_block.glb#Scene0"),
         scarecrow:asset_server.load("scarecrow.glb#Scene0"),
+    }
+}
+pub fn load_images(mut image_assets: ResMut<ImageAssets>, asset_server: Res<AssetServer>){
+    *image_assets = ImageAssets{
+        coin:asset_server.load("textures/coin1.png"),
+        tree:asset_server.load("textures/tree.png"),
+        rock:asset_server.load("textures/rock.png"),
+        garbage:asset_server.load("textures/garbage.png"),
+        jolly_block:asset_server.load("textures/teleport.png"),
+        fish:asset_server.load("textures/fish.png"),
+        water:asset_server.load("textures/water.png"),
+        bush:asset_server.load("textures/bush.png"),
     }
 }
 

@@ -121,6 +121,7 @@ fn create_world(mut commands: Commands,
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.01,0.01,0.01)).scale;
+                        content_transform.rotate_y(f32::to_degrees(180.0));
                     }
                     Water(_) => {
                         content_scene = Default::default();
@@ -279,6 +280,7 @@ fn discover_tile(mut commands: Commands,
                     Bank(_) => {
                         content_scene = scene_assets.bank.clone(); //TODO non funziona
                         content_transform.scale = Transform::from_scale(Vec3::new(0.0001,0.0001,0.0001)).scale;
+                        content_transform.rotate_y(f32::to_degrees(180.0));
                     }
                     Water(_) => {
                         content_scene = Default::default();
@@ -480,6 +482,7 @@ fn update_content(mut content_query: Query<(&mut Transform,&mut Handle<Scene>),W
                                 Bank(_) => {
                                     *content_scene = scene_assets.bank.clone();
                                     content_transform.scale = Transform::from_scale(Vec3::new(0.1,0.1,0.1)).scale;
+                                    content_transform.rotate_y(f32::to_degrees(180.0));
                                 }
                                 Water(_) => {
                                     *content_scene = Default::default();
