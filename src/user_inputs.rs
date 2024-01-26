@@ -45,7 +45,13 @@ fn previous(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>
 }
 fn back_pack_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
     if keyboard_input.just_pressed(KeyCode::B) {
-        game_data.robot_data.back_pack_visibility = !game_data.robot_data.back_pack_visibility;
+        if game_data.robot_data.back_pack_visibility == 0{
+            game_data.robot_data.back_pack_visibility = 1;
+        } else if game_data.robot_data.back_pack_visibility == 1 {
+            game_data.robot_data.back_pack_visibility = 2;
+        }else {
+            game_data.robot_data.back_pack_visibility = 0;
+        }
     }
 }
 fn feed_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
@@ -53,7 +59,7 @@ fn feed_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Gam
         game_data.feed_visibility = !game_data.feed_visibility;
     }
 }
-fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
+fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///Pressing M the user can visualize the entire world known///
     if keyboard_input.just_pressed(KeyCode::M) {
         info!("MAPPAPAAAA");
         if game_data.camera_data.camera_mode != 3{
@@ -78,7 +84,7 @@ fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Game
 fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
                      mut game_data: ResMut<GameData>,
                     mut query: Query<&mut Visibility,With<ContentComponent>>,
-){ ///USER INPUT VERO///
+){ ///Pressing P the user can choose to hide or show all the contents///
     if keyboard_input.just_pressed(KeyCode::P) {
         if game_data.content_visibility{
             for mut i in query.iter_mut(){

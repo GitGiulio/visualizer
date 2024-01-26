@@ -22,6 +22,8 @@ pub struct PointsUpdateComponent;
 #[derive(Component)]
 pub struct BackPackComponent;
 #[derive(Component)]
+pub struct BackPackImageComponent;
+#[derive(Component)]
 pub struct BackPackUpdateComponent;
 #[derive(Component)]
 pub struct FeedComponent;
@@ -38,6 +40,7 @@ impl Plugin for GUIPlugin{
             .add_systems(Update,update_points_image.in_set(MySet::Third))
             .add_systems(Update,update_feed.in_set(MySet::Third))
             .add_systems(Update,update_backpack.in_set(MySet::Third))
+            .add_systems(Update,update_backpack_images.in_set(MySet::Third))
             .add_systems(Update,update_backpack_update.in_set(MySet::Third));
     }
 }
@@ -200,122 +203,112 @@ fn create_gui(mut commands: Commands,
             ..default()
         }),FeedComponent));
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.water.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
                 top: Val::Px(25.0),
-                right: Val::Px(75.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.rock.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(47.0),
-                right: Val::Px(75.0),
+                top: Val::Px(46.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
+
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.tree.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(69.0),
-                right: Val::Px(75.0),
+                top: Val::Px(67.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
+
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.bush.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(91.0),
-                right: Val::Px(75.0),
+                top: Val::Px(86.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
+
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.jolly_block.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(113.0),
-                right: Val::Px(75.0),
+                top: Val::Px(107.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.garbage.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(135.0),
-                right: Val::Px(75.0),
+                top: Val::Px(128.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
     commands.spawn(
-        ImageBundle {
+       (ImageBundle {
             image: image_assets.coin.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(157.0),
-                right: Val::Px(75.0),
+                top: Val::Px(149.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
+        },BackPackImageComponent));
     commands.spawn(
-        ImageBundle {
+        (ImageBundle {
             image: image_assets.fish.clone().into(),
             style: Style {
                 position_type: PositionType::Absolute,
-                top: Val::Px(179.0),
-                right: Val::Px(75.0),
+                top: Val::Px(170.0),
+                right: Val::Px(80.0),
                 width: Val::Px(22.0),
                 height: Val::Px(22.0),
                 ..default()
             },
             ..default()
-        });
-    commands.spawn(
-        ImageBundle {
-            image: image_assets.fish.clone().into(),
-            style: Style {
-                position_type: PositionType::Absolute,
-                top: Val::Px(179.0),
-                right: Val::Px(75.0),
-                width: Val::Px(22.0),
-                height: Val::Px(22.0),
-                ..default()
-            },
-            ..default()
-        });
+        },BackPackImageComponent));
 }
 fn update_energy(mut energy_query: Query<&mut Text,With<EnergyComponent>>,
                  game_data: Res<GameData>,
@@ -400,9 +393,9 @@ fn update_backpack(mut back_pack_query: Query<&mut Text,With<BackPackComponent>>
                    mut game_data: ResMut<GameData>,
 ) {
     let mut back_pack_text = back_pack_query.single_mut();
-    if !game_data.robot_data.back_pack_visibility{
+    if game_data.robot_data.back_pack_visibility == 0{
         back_pack_text.sections[0].value = format!("");
-    }else {
+    }else if game_data.robot_data.back_pack_visibility == 1{
         let water = game_data.robot_data.back_pack.get(&Content::Water(0)).unwrap();
         let tree = game_data.robot_data.back_pack.get(&Content::Tree(0)).unwrap();
         let rock = game_data.robot_data.back_pack.get(&Content::Rock(0)).unwrap();
@@ -411,7 +404,30 @@ fn update_backpack(mut back_pack_query: Query<&mut Text,With<BackPackComponent>>
         let bush = game_data.robot_data.back_pack.get(&Content::Bush(0)).unwrap();
         let garbage = game_data.robot_data.back_pack.get(&Content::Garbage(0)).unwrap();
         let coin = game_data.robot_data.back_pack.get(&Content::Coin(0)).unwrap();
-        back_pack_text.sections[0].value = format!("----BackPack----\n Water:{}\n Rock:{}\n Tree:{}\n Bush:{}\n JollyBlock:{}   \n Garbage:{}\n Coin:{}\n Fish:{}\n----BackPack----", water, rock, tree, bush, jolly_block, garbage, coin, fish);
+        back_pack_text.sections[0].value = format!("-----BackPack-----\n          :{}\n          :{}\n          :{}\n          :{}\n          :{}\n          :{}\n          :{}\n          :{}\n-----BackPack-----", water, rock, tree, bush, jolly_block, garbage, coin, fish);
+    }else if game_data.robot_data.back_pack_visibility == 2{
+        let water = game_data.robot_data.back_pack.get(&Content::Water(0)).unwrap();
+        let tree = game_data.robot_data.back_pack.get(&Content::Tree(0)).unwrap();
+        let rock = game_data.robot_data.back_pack.get(&Content::Rock(0)).unwrap();
+        let fish = game_data.robot_data.back_pack.get(&Content::Fish(0)).unwrap();
+        let jolly_block = game_data.robot_data.back_pack.get(&Content::JollyBlock(0)).unwrap();
+        let bush = game_data.robot_data.back_pack.get(&Content::Bush(0)).unwrap();
+        let garbage = game_data.robot_data.back_pack.get(&Content::Garbage(0)).unwrap();
+        let coin = game_data.robot_data.back_pack.get(&Content::Coin(0)).unwrap();
+        back_pack_text.sections[0].value = format!("-----BackPack-----\n  Water   :{}\n   Rock   :{}\n   Tree   :{}\n   Bush   :{}\n  Jolly   :{}\nGarbage   :{}\n   Coin   :{}\n   Fish   :{}\n-----BackPack-----", water, rock, tree, bush, jolly_block, garbage, coin, fish);
+    }
+}
+fn update_backpack_images(mut back_pack_images_query: Query<&mut Visibility,With<BackPackImageComponent>>,
+                         game_data: Res<GameData>,
+) {
+    if game_data.robot_data.back_pack_visibility == 0{
+        for mut i in back_pack_images_query.iter_mut(){
+            *i = Visibility::Hidden;
+        }
+    }else{
+        for mut i in back_pack_images_query.iter_mut(){
+            *i = Visibility::Visible;
+        }
     }
 }
 fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackPackUpdateComponent>>,
@@ -419,9 +435,9 @@ fn update_backpack_update(mut back_pack_update_query: Query<&mut Text,With<BackP
                           time: Res<Time>,
 ) {
     let mut back_pack_update_text = back_pack_update_query.single_mut();
-    if !game_data.robot_data.back_pack_visibility{
+    if game_data.robot_data.back_pack_visibility == 0{
         back_pack_update_text.sections[0].value = format!("");
-    }else {
+    }else{
         let mut str = String::from("");
         let mut v = vec![];
         v.push(game_data.robot_data.back_pack_update.get(&Content::Water(0)).unwrap());

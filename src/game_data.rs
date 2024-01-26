@@ -9,7 +9,7 @@ use crate::RobotAction;
 pub(crate) struct RobotData{
     pub(crate) back_pack:HashMap<Content,i32>,
     pub(crate) back_pack_update:HashMap<Content,i32>,
-    pub(crate) back_pack_visibility:bool,
+    pub(crate) back_pack_visibility:u8,
     pub(crate) robot_velocity:Vec3,
     pub(crate) robot_direction:crate::Direction,
     pub(crate) robot_translation:Vec3,
@@ -33,7 +33,7 @@ impl RobotData{
         RobotData{
             back_pack,
             back_pack_update,
-            back_pack_visibility: true,
+            back_pack_visibility: 1,
             robot_velocity: Vec3::ZERO,
             robot_direction: crate::Direction::Up,
             robot_translation: Vec3::ZERO,
