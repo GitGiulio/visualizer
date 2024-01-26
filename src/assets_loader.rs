@@ -42,6 +42,10 @@ pub struct ImageAssets{
     pub fish:Handle<Image>,
     pub water:Handle<Image>,
     pub bush:Handle<Image>,
+    pub energy_border:Handle<Image>,
+    pub energy:Handle<Image>,
+    pub points_border:Handle<Image>,
+    pub points:Handle<Image>,
 }
 pub struct AssetsLoaderPlugin;
 
@@ -96,6 +100,10 @@ pub fn load_images(mut image_assets: ResMut<ImageAssets>, asset_server: Res<Asse
         fish:asset_server.load("textures/fish.png"),
         water:asset_server.load("textures/water.png"),
         bush:asset_server.load("textures/bush.png"),
+        energy_border:asset_server.load("textures/EnergyBorder.png"),
+        energy:asset_server.load("textures/EnergyBox.png"),
+        points_border:asset_server.load("textures/PointsBorder.png"),
+        points:asset_server.load("textures/PointsBox.png"),
     }
 }
 

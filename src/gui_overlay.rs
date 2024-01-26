@@ -10,9 +10,13 @@ use crate::RobotAction::*;
 #[derive(Component)]
 pub struct EnergyComponent;
 #[derive(Component)]
+pub struct EnergyImageComponent;
+#[derive(Component)]
 pub struct EnergyUpdateComponent;
 #[derive(Component)]
 pub struct PointsComponent;
+#[derive(Component)]
+pub struct PointsImageComponent;
 #[derive(Component)]
 pub struct PointsUpdateComponent;
 #[derive(Component)]
@@ -28,8 +32,10 @@ impl Plugin for GUIPlugin{
         app.add_systems(PostStartup,create_gui)
             .add_systems(Update,update_energy.in_set(MySet::Third))
             .add_systems(Update,update_energy_update.in_set(MySet::Third))
+            .add_systems(Update,update_energy_image.in_set(MySet::Third))
             .add_systems(Update,update_points.in_set(MySet::Third))
             .add_systems(Update,update_points_update.in_set(MySet::Third))
+            .add_systems(Update,update_points_image.in_set(MySet::Third))
             .add_systems(Update,update_feed.in_set(MySet::Third))
             .add_systems(Update,update_backpack.in_set(MySet::Third))
             .add_systems(Update,update_backpack_update.in_set(MySet::Third));
@@ -38,16 +44,41 @@ impl Plugin for GUIPlugin{
 fn create_gui(mut commands: Commands,
               game_data: Res<GameData>,
               image_assets: Res<ImageAssets>,
-              mut meshes: ResMut<Assets<Mesh>>,
-              mut materials: ResMut<Assets<ColorMaterial>>,
 ){
-    let energy_string = format!("Energy: {}",game_data.robot_data.energy);
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.energy_border.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(3.0),
+                left: Val::Px(2.0),
+                width: Val::Px(200.0),
+                height: Val::Px(30.0),
+                ..default()
+            },
+            ..default()
+        });
+    commands.spawn(
+        (ImageBundle {
+            image: image_assets.energy.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(3.0),
+                left: Val::Px(4.0),
+                width: Val::Px(194.0),
+                height: Val::Px(30.0),
+                ..default()
+            },
+            ..default()
+        },
+         EnergyImageComponent
+        ));
     commands.spawn((
         TextBundle::from_section(
-            energy_string,
+            format!("Energy: {}",game_data.robot_data.energy),
             TextStyle {
                 font_size: 30.0,
-                color: Color::rgb(1.0, 1.0, 0.0),
+                color: Color::rgb(0.0, 0.0, 0.0),
                 ..default()
             },
         ).with_style(Style {
@@ -66,16 +97,44 @@ fn create_gui(mut commands: Commands,
             },
         ).with_style(Style {
             position_type: PositionType::Absolute,
-            bottom: Val::Px(30.0),
+            bottom: Val::Px(35.0),
             left: Val::Px(130.0),
             ..default()
         }),EnergyUpdateComponent));
+    commands.spawn(
+        (ImageBundle {
+            image: image_assets.points.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(6.0),
+                left: Val::Px(4.0),
+                width: Val::Px(0.0),
+                height: Val::Px(30.0),
+                ..default()
+            },
+            ..default()
+        },
+         PointsImageComponent
+        ));
+    commands.spawn(
+        ImageBundle {
+            image: image_assets.points_border.clone().into(),
+            style: Style {
+                position_type: PositionType::Absolute,
+                top: Val::Px(6.0),
+                left: Val::Px(2.0),
+                width: Val::Px(220.0),
+                height: Val::Px(30.0),
+                ..default()
+            },
+            ..default()
+        });
     commands.spawn((
         TextBundle::from_section(
             format!("Points: 0/{}",game_data.max_points),
             TextStyle {
                 font_size: 30.0,
-                color: Color::rgb(0.5, 0.1, 0.5),
+                color: Color::rgb(0.0, 0.0, 0.0),
                 ..default()
             },
         ).with_style(Style {
@@ -94,7 +153,7 @@ fn create_gui(mut commands: Commands,
             },
         ).with_style(Style {
             position_type: PositionType::Absolute,
-            top: Val::Px(30.0),
+            top: Val::Px(35.0),
             left: Val::Px(130.0),
             ..default()
         }),PointsUpdateComponent));
@@ -257,42 +316,19 @@ fn create_gui(mut commands: Commands,
             },
             ..default()
         });
-    commands.spawn(
-        (ImageBundle {
-            image: image_assets.fish.clone().into(),
-            style: Style {
-                position_type: PositionType::Absolute,
-                bottom: Val::Px(5.0),
-                left: Val::Px(5.0),
-                width: Val::Px(150.0),
-                height: Val::Px(75.0),
-                ..default()
-            },
-            ..default()
-        },
-        EnergyComponent
-        ));
-    commands.spawn(
-        (ImageBundle {
-            image: image_assets.fish.clone().into(),
-            style: Style {
-                position_type: PositionType::Absolute,
-                top: Val::Px(5.0),
-                left: Val::Px(5.0),
-                width: Val::Px(150.0),
-                height: Val::Px(75.0),
-                ..default()
-            },
-            ..default()
-        },
-        PointsComponent
-    ));
 }
 fn update_energy(mut energy_query: Query<&mut Text,With<EnergyComponent>>,
-                 mut game_data: ResMut<GameData>,
+                 game_data: Res<GameData>,
 ){
     let mut energy_text = energy_query.single_mut();
     energy_text.sections[0].value = format!("Energy: {}", game_data.robot_data.energy);
+
+}
+fn update_energy_image(game_data: Res<GameData>,
+                 mut energy_image_style_query: Query<&mut Style,With<EnergyImageComponent>>,
+){
+    let mut energy_image_style = energy_image_style_query.single_mut();
+    energy_image_style.width = Val::Px((game_data.robot_data.energy as f32 / 7000.0) * 194.0);
 }
 fn update_energy_update(mut energy_update_query: Query<&mut Text,With<EnergyUpdateComponent>>,
                         mut game_data: ResMut<GameData>,
@@ -312,10 +348,16 @@ fn update_energy_update(mut energy_update_query: Query<&mut Text,With<EnergyUpda
     }
 }
 fn update_points(mut points_query: Query<&mut Text,With<PointsComponent>>,
-                 mut game_data: ResMut<GameData>,
+                 game_data: Res<GameData>,
 ){
     let mut points_text = points_query.single_mut();
     points_text.sections[0].value = format!("Points: {}/{}",game_data.robot_data.points,game_data.max_points);
+}
+fn update_points_image(game_data: Res<GameData>,
+                       mut points_image_style_query: Query<&mut Style,With<PointsImageComponent>>,
+){
+    let mut points_image_style = points_image_style_query.single_mut();
+    points_image_style.width = Val::Px((game_data.robot_data.points / game_data.max_points) * 214.0);
 }
 fn update_points_update(mut points_update_query: Query<&mut Text,With<PointsUpdateComponent>>,
                         mut game_data: ResMut<GameData>,
