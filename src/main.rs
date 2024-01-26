@@ -9,6 +9,7 @@ mod movement;
 mod game_data;
 mod rudimental_a_i;
 
+use std::fmt::{Debug, Formatter};
 use bevy::ecs::bundle::DynamicBundle;
 use bevy::prelude::*;
 use robotics_lib::world::environmental_conditions::WeatherType;
@@ -21,7 +22,6 @@ use crate::game_data::{CameraData, GameData, GameDataPlugin, RobotData};
 use crate::gui_overlay::GUIPlugin;
 use crate::movement::MovementPlugin;
 use crate::robot::RobotPlugin;
-use crate::rudimental_a_i::ArtificialIntelligencePlugin;
 use crate::user_inputs::InputPlugin;
 use crate::weather::WeatherPlugin;
 use crate::world::WorldPlugin;
@@ -32,20 +32,51 @@ pub enum Direction{
     Up,
     Down
 }
-#[derive(Debug,Clone)]
+#[derive(Clone)]
 pub enum RobotAction {
     Move{direction:Direction,elevation:f32,energy:i32,points:f32},
     UpdateTile{new_tile:Tile,back_pack_update:Vec<(Content,i32)>,coordinates:(f32,f32),energy:i32,points:f32},
     DiscoverTile{tile:Tile,coordinates:(f32,f32),energy:i32,points:f32},
     GainEnergy{energy:i32,points:f32},
     Teleport{destination:(f32,f32),destination_elevation:f32,energy:i32,points:f32},
-    Craft{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
-    Sell{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
-    Buy{/*TODO dati necessari*/back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
+    Other{/*TODO dati necessari*/action_type:String,back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
+}
+impl Debug for RobotAction{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RobotAction::Move {direction,elevation,energy,points} => {
+                write!(f,"Moved {:?}",direction)
+            }
+            RobotAction::UpdateTile {new_tile,back_pack_update,coordinates,energy,points} => {
+                //TODO capire come differenziare piazzamento di roccie, raccolta oggetti ecc..
+                write!(f,"UpdateTile")
+            }
+            RobotAction::DiscoverTile {tile,coordinates,energy,points} => {
+                if tile.content != Content::None {
+                    write!(f,"New {:?} tile viewed at ({},{}) containing {}",tile.tile_type,coordinates.0  as i32,coordinates.1  as i32,tile.content)
+                }else {
+                    write!(f,"New {:?} tile viewed at ({},{})",tile.tile_type,coordinates.0  as i32,coordinates.1  as i32)
+                }
+            }
+            RobotAction::GainEnergy {energy,points} => {
+                write!(f,"Gained {} energy",energy)
+
+            }
+            RobotAction::Teleport {destination,destination_elevation,energy,points} => {
+                write!(f,"Teleported to ({},{})",destination.0  as i32,destination.1 as i32)
+            }
+            RobotAction::Other {action_type,back_pack_update,energy,points} => {
+                write!(f,"{}",action_type) //TODO pensarci
+            }
+            _ => {
+                write!(f,"ERROR")
+            }
+        }
+    }
 }
 #[derive(Resource,Debug)] /// OGNi VOLTA CHE CAMBIA QUALCOSA L'IA MI AGGIORNA QUESTA RESOURCE E IO HO TUTTO LI PRONTO
 pub struct GameUpdate{ //non so ancora bene come funziona rip
-    pub azioni: Vec<(RobotAction,WeatherType)>, //TODO cambiarae con Rc<RefCell<Vec<(RobotAction,WeatherType)>>> e provare a vedere se panica
+    pub azioni: Vec<(RobotAction,WeatherType)>,
 }
 
 pub struct VisualizerGLC{

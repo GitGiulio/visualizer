@@ -14,9 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game_data.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_data.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_overlay.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_overlay.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user_inputs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_inputs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,7 +160,7 @@
       <workItem from="1706256961804" duration="7248000" />
       <workItem from="1706268126732" duration="12000" />
       <workItem from="1706276802404" duration="69000" />
-      <workItem from="1706280001182" duration="3277000" />
+      <workItem from="1706280001182" duration="5009000" />
     </task>
     <servers />
   </component>
