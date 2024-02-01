@@ -12,7 +12,7 @@ mod rudimental_a_i;
 use std::fmt::{Debug, Formatter};
 use bevy::ecs::bundle::DynamicBundle;
 use bevy::prelude::*;
-use robotics_lib::world::environmental_conditions::WeatherType;
+use robotics_lib::world::environmental_conditions::{EnvironmentalConditions, WeatherType};
 use robotics_lib::world::tile::{Content, Tile};
 use robotics_lib::world::tile::Content::*;
 use robotics_lib::world::world_generator::Generator;
@@ -26,61 +26,60 @@ use crate::user_inputs::InputPlugin;
 use crate::weather::WeatherPlugin;
 use crate::world::WorldPlugin;
 #[derive(Debug,Clone)]
-pub enum Direction{
+pub enum Direction{ //TODO capire come usarle comunque per la direzzione in cui deve guardare il robot nonostante non abbia gia la pappa pronta
     Right,
     Left,
     Up,
     Down
 }
-#[derive(Clone)]
-pub enum RobotAction {
+#[derive(Clone,Debug)]
+pub enum RobotAction { //TODO EVENTI YEEEEE
     Move{direction:Direction,elevation:f32,energy:i32,points:f32},
     UpdateTile{new_tile:Tile,back_pack_update:Vec<(Content,i32)>,coordinates:(f32,f32),energy:i32,points:f32},
     DiscoverTile{tile:Tile,coordinates:(f32,f32),energy:i32,points:f32},
     GainEnergy{energy:i32,points:f32},
     Teleport{destination:(f32,f32),destination_elevation:f32,energy:i32,points:f32},
-    Other{/*TODO dati necessari*/action_type:String,back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
+    Other{action_type:String,back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
 }
-impl Debug for RobotAction{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RobotAction::Move {direction,elevation,energy,points} => {
-                write!(f,"Moved {:?}",direction)
-            }
-            RobotAction::UpdateTile {new_tile,back_pack_update,coordinates,energy,points} => {
-                //TODO capire come differenziare piazzamento di roccie, raccolta oggetti ecc..
-                write!(f,"UpdateTile")
-            }
-            RobotAction::DiscoverTile {tile,coordinates,energy,points} => {
-                if tile.content != Content::None {
-                    write!(f,"New {:?} tile viewed at ({},{}) containing {}",tile.tile_type,coordinates.0  as i32,coordinates.1  as i32,tile.content)
-                }else {
-                    write!(f,"New {:?} tile viewed at ({},{})",tile.tile_type,coordinates.0  as i32,coordinates.1  as i32)
-                }
-            }
-            RobotAction::GainEnergy {energy,points} => {
-                write!(f,"Gained {} energy",energy)
+pub enum Event { //TODO trasferire a questa struttura dati tutte le funzioni (dovrebbe venire pure meglio)
+    /// Robot has been initialized and its lifecycle has started
+    Ready,
+    /// Robot has ended its lifecycle
+    Terminated,
+    /// [robotics_lib::event::events::Event] fired when time of the day changes, contains the new [EnvironmentalConditions]
+    TimeChanged(EnvironmentalConditions),
 
-            }
-            RobotAction::Teleport {destination,destination_elevation,energy,points} => {
-                write!(f,"Teleported to ({},{})",destination.0  as i32,destination.1 as i32)
-            }
-            RobotAction::Other {action_type,back_pack_update,energy,points} => {
-                write!(f,"{}",action_type) //TODO pensarci
-            }
-            _ => {
-                write!(f,"ERROR")
-            }
-        }
-    }
+    /// [robotics_lib::event::events::Event] fired when the day changes, contains the new [EnvironmentalConditions]
+    DayChanged(EnvironmentalConditions),
+
+    /// [robotics_lib::event::events::Event] fired when energy gets recharged, contains the recharge amount
+    EnergyRecharged(usize),
+
+    /// [robotics_lib::event::events::Event] fired when energy is consumed, contains the consumed amount
+    EnergyConsumed(usize),
+
+    /// [robotics_lib::event::events::Event] fired when the robot moves to new coordinates
+    ///
+    /// This [robotics_lib::event::events::Event] contains the [Tile] to which the robot moved and the coordinates
+    Moved(Tile, (usize, usize)),
+
+    /// [robotics_lib::event::events::Event] fired when a tile content gets updated.
+    ///
+    /// This [robotics_lib::event::events::Event] contains the [Tile] of the updated content and the coordinates
+    TileContentUpdated(Tile, (usize, usize)),
+
+    /// [robotics_lib::event::events::Event] fired when a [Content] is added to the backpack, also contains the amount of content added
+    AddedToBackpack(Content, usize),
+
+    /// [robotics_lib::event::events::Event] fired when a [Content] is removed from the backpack, also contains the amount of content removed
+    RemovedFromBackpack(Content, usize),
 }
 #[derive(Resource,Debug)] /// OGNi VOLTA CHE CAMBIA QUALCOSA L'IA MI AGGIORNA QUESTA RESOURCE E IO HO TUTTO LI PRONTO
 pub struct GameUpdate{ //non so ancora bene come funziona rip
-    pub azioni: Vec<(RobotAction,WeatherType)>,
+    pub azioni: Vec<(RobotAction,WeatherType)>, //sarà un Vec<Event> cosi goldo è  TODO discover tiles è un problema d** c***
+    //pub points: f32, //i punti non sono trasmessi tramite eventi :(
 }
-
-pub struct VisualizerGLC{
-}
+pub struct VisualizerGLC;
 impl VisualizerGLC{
     pub fn run<T:AI + Resource>(artificial_intelligence: T, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize,max_points:f32){
         let mut robot_data = RobotData::new();
@@ -133,7 +132,7 @@ pub struct TestAI{
     dati:bool,
 }
 impl AI for TestAI{
-    fn next(&mut self) -> Vec<(RobotAction, WeatherType)> {
+    fn next(&mut self) -> Vec<(RobotAction, WeatherType)> { // TODO -> Vec<Event>
         return vec![];
     }
 }
@@ -146,7 +145,6 @@ fn main() {
     // println!("e_seed {}", generator.get_e_seed()); //
     // println!("m_seed {}", generator.get_m_seed()); // get the seeds so u can recreate the same tile_map later if you need
     // println!("t_seed {}", generator.get_t_seed()); //
-//
 
     let mut test_a_i = TestAI{ dati:true};
     let mut mondo = generator.gen();

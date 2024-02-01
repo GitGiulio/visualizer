@@ -18,7 +18,8 @@ impl Plugin for RobotPlugin{
         app.add_systems(PostStartup,spawn_robot)
             .add_systems(Update,move_robot.in_set(MySet::Third))
             .add_systems(Update,get_energy.in_set(MySet::Third))
-            .add_systems(Update,teleport_robot.in_set(MySet::Third));
+            .add_systems(Update,teleport_robot.in_set(MySet::Third))
+            .add_systems(Update,fine_robot.in_set(MySet::Third));
     }
 }
 fn spawn_robot(mut commands: Commands,scene_assets: Res<SceneAssets>,
@@ -34,23 +35,51 @@ fn spawn_robot(mut commands: Commands,scene_assets: Res<SceneAssets>,
         },
     }, RobotComponent));
 }
+fn fine_robot(game_data: Res<GameData>,
+              mut game_update: ResMut<GameUpdate>,
+){
+    if !game_data.next_action{
+        return;
+    }
+    if game_update.azioni.len()==0 {
+        return;
+    }
+    /*
+    match game_update.azioni[0] {
+        Terminated => {
+            //TODO schermo nero con scritta tipo "the robot terminated his task" e un bottone che cliccato fa terminare l'app (forse potrei anche mettere un bottone per riavviare)
+        }
+        _ => { return; }
+    }*/
+}
 fn get_energy(mut game_update: ResMut<GameUpdate>,
               mut game_data: ResMut<GameData>,
 ){
     if !game_data.next_action{
         return;
-    }else {
-        if game_update.azioni.len() != 0 {
-            match &game_update.azioni[0].0 {
-                GainEnergy{energy,points} => {
-                    game_data.robot_data.points += points;
-                    game_data.robot_data.points_update = *points;
-                    game_data.robot_data.energy += energy;
-                    game_data.robot_data.energy_update = *energy;
-                }
-                _ => {return;}
+    }
+    if game_update.azioni.len() != 0 {
+        match &game_update.azioni[0].0 {
+            GainEnergy{energy,points} => {
+                game_data.robot_data.points += points;
+                game_data.robot_data.points_update = *points;
+                game_data.robot_data.energy += energy;
+                game_data.robot_data.energy_update = *energy;
             }
+            _ => {return;}
         }
+        /*
+        match &game_update.azioni[0] {
+            EnergyRecharged(energy) => {
+                game_data.robot_data.energy += energy;
+                game_data.robot_data.energy_update = *energy;
+            }
+            EnergyConsumed(energy) => {
+                game_data.robot_data.energy -= energy;
+                game_data.robot_data.energy_update = *energy;
+            }
+            _ => {return;}
+        }*/
     }
 }
 fn move_robot(mut robot_query: Query<&mut Transform,With<RobotComponent>>,
