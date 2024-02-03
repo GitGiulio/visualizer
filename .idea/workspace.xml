@@ -14,8 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="fa8a73dc-fe23-4947-aba6-d5f42328bff3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/robot.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/robot.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rudimental_a_i.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rudimental_a_i.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +75,7 @@
       <recent name="C:\Users\giuli\RustroverProjects\visualizer\assets" />
     </key>
   </component>
-  <component name="RunManager" selected="Cargo.Run visualizer_lo_cigno_giulio">
+  <component name="RunManager" selected="Cargo.Run">
     <configuration name="Run visualizer_lo_cigno_giulio" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="run --package visualizer_lo_cigno_giulio --bin visualizer_lo_cigno_giulio" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -108,11 +110,6 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Cargo.Run visualizer_lo_cigno_giulio" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -164,7 +161,11 @@
       <workItem from="1706280001182" duration="5623000" />
       <workItem from="1706478034124" duration="659000" />
       <workItem from="1706623494517" duration="3771000" />
-      <workItem from="1706823195097" duration="1386000" />
+      <workItem from="1706823195097" duration="3617000" />
+      <workItem from="1706860684453" duration="188000" />
+      <workItem from="1706860893117" duration="1337000" />
+      <workItem from="1706866528185" duration="449000" />
+      <workItem from="1706974494337" duration="1671000" />
     </task>
     <servers />
   </component>

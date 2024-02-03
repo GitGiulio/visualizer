@@ -11,7 +11,12 @@ mod rudimental_a_i;
 
 use std::fmt::{Debug, Formatter};
 use bevy::ecs::bundle::DynamicBundle;
+use robotics_lib::event::events::Event;
 use bevy::prelude::*;
+use robotics_lib::energy::Energy;
+use robotics_lib::runner::{Robot, Runnable, Runner};
+use robotics_lib::runner::backpack::BackPack;
+use robotics_lib::world::coordinates::Coordinate;
 use robotics_lib::world::environmental_conditions::{EnvironmentalConditions, WeatherType};
 use robotics_lib::world::tile::{Content, Tile};
 use robotics_lib::world::tile::Content::*;
@@ -41,47 +46,16 @@ pub enum RobotAction { //TODO EVENTI YEEEEE
     Teleport{destination:(f32,f32),destination_elevation:f32,energy:i32,points:f32},
     Other{action_type:String,back_pack_update:Vec<(Content,i32)>,energy:i32,points:f32},
 }
-pub enum Event { //TODO trasferire a questa struttura dati tutte le funzioni (dovrebbe venire pure meglio)
-    /// Robot has been initialized and its lifecycle has started
-    Ready,
-    /// Robot has ended its lifecycle
-    Terminated,
-    /// [robotics_lib::event::events::Event] fired when time of the day changes, contains the new [EnvironmentalConditions]
-    TimeChanged(EnvironmentalConditions),
-
-    /// [robotics_lib::event::events::Event] fired when the day changes, contains the new [EnvironmentalConditions]
-    DayChanged(EnvironmentalConditions),
-
-    /// [robotics_lib::event::events::Event] fired when energy gets recharged, contains the recharge amount
-    EnergyRecharged(usize),
-
-    /// [robotics_lib::event::events::Event] fired when energy is consumed, contains the consumed amount
-    EnergyConsumed(usize),
-
-    /// [robotics_lib::event::events::Event] fired when the robot moves to new coordinates
-    ///
-    /// This [robotics_lib::event::events::Event] contains the [Tile] to which the robot moved and the coordinates
-    Moved(Tile, (usize, usize)),
-
-    /// [robotics_lib::event::events::Event] fired when a tile content gets updated.
-    ///
-    /// This [robotics_lib::event::events::Event] contains the [Tile] of the updated content and the coordinates
-    TileContentUpdated(Tile, (usize, usize)),
-
-    /// [robotics_lib::event::events::Event] fired when a [Content] is added to the backpack, also contains the amount of content added
-    AddedToBackpack(Content, usize),
-
-    /// [robotics_lib::event::events::Event] fired when a [Content] is removed from the backpack, also contains the amount of content removed
-    RemovedFromBackpack(Content, usize),
-}
 #[derive(Resource,Debug)] /// OGNi VOLTA CHE CAMBIA QUALCOSA L'IA MI AGGIORNA QUESTA RESOURCE E IO HO TUTTO LI PRONTO
 pub struct GameUpdate{ //non so ancora bene come funziona rip
-    pub azioni: Vec<(RobotAction,WeatherType)>, //sarà un Vec<Event> cosi goldo è  TODO discover tiles è un problema d** c***
+    pub azioni: Vec<(RobotAction,WeatherType)>,
+    //pub(crate) events: Vec<Event> cosi goldo è
+    // TODO discover tiles è un problema d** c*** capire come si "vede" la mappa
     //pub points: f32, //i punti non sono trasmessi tramite eventi :(
 }
 pub struct VisualizerGLC;
 impl VisualizerGLC{
-    pub fn run<T:AI + Resource>(artificial_intelligence: T, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize,max_points:f32){
+    pub fn run(artificial_intelligence: bool, robot_actions:Vec<(RobotAction,WeatherType)>, robot_spawn: (usize, usize), robot_elevation: usize,energy:usize,max_points:f32){
         let mut robot_data = RobotData::new();
         robot_data.energy = energy as i32;
         robot_data.robot_translation = Transform::from_translation(Vec3::new(robot_spawn.0 as f32,robot_elevation as f32 / 10.0 - 0.45,robot_spawn.1 as f32)).translation;
@@ -105,7 +79,6 @@ impl VisualizerGLC{
                 content_visibility: true,
                 max_points,
             })
-            .insert_resource( artificial_intelligence)
             .insert_resource(GameUpdate {
                 azioni: robot_actions,
             })
@@ -126,19 +99,49 @@ impl VisualizerGLC{
 pub trait AI{
     fn next(&mut self)->Vec<(RobotAction,WeatherType)>;
 }
-
-#[derive(Resource,Debug)]
-pub struct TestAI{
-    dati:bool,
+struct TestRobot(Robot);
+impl Runnable for TestRobot{
+    fn process_tick(&mut self, world: &mut robotics_lib::world::World) {
+     // do something
+    }
+    fn handle_event(&mut self, event: robotics_lib::event::events::Event) {
+     // react to this event in your GUI
+    }
+    fn get_energy(&self) -> &Energy {
+     &self.0.energy
+    }
+    fn get_energy_mut(&mut self) -> &mut Energy {
+     &mut self.0.energy
+    }
+    fn get_coordinate(&self) -> &Coordinate {
+    &self.0.coordinate
+    }
+    fn get_coordinate_mut(&mut self) -> &mut Coordinate{
+     &mut self.0.coordinate
+    }
+    fn get_backpack(&self) -> &BackPack {
+     &self.0.backpack
+    }
+    fn get_backpack_mut(&mut self) -> &mut BackPack {
+     &mut self.0.backpack
+    }
 }
+struct TestAI{
+    runner: Runner,
+}
+
 impl AI for TestAI{
-    fn next(&mut self) -> Vec<(RobotAction, WeatherType)> { // TODO -> Vec<Event>
+    fn next(&mut self) -> Vec<(RobotAction, WeatherType)> { // TODO -> (points:f32,world:Option<Vec<Vec<Option<Tile>>>>) poi faccio la dif con il "mondo" che mi salvo in game data e aggiungo le nuove tile e aggiorno quelle cambiate
+
+        self.runner.game_tick();
+
         return vec![];
     }
 }
 
 fn main() {
-    let mut generator = rip_worldgenerator::MyWorldGen::new_param(100,1,1,1,false,false,4);
+    let mut generator = rip_worldgenerator::MyWorldGen::new_param(200,2,3,1,false,false,4,false,Option::None);
+    let mut generator2 = rip_worldgenerator::MyWorldGen::new_param(100,2,3,1,false,false,4,false,Option::None);
 
     //let mut generator = who_needs_gv_world_generator::WorldGenerator::new(150);
 
@@ -146,9 +149,13 @@ fn main() {
     // println!("m_seed {}", generator.get_m_seed()); // get the seeds so u can recreate the same tile_map later if you need
     // println!("t_seed {}", generator.get_t_seed()); //
 
-    let mut test_a_i = TestAI{ dati:true};
+    let mut robot = TestRobot(Robot::new());
+    let mut runner = Runner::new(Box::new(robot),&mut generator2).unwrap();
+
+    let mut test_a_i = TestAI{runner};
+
     let mut mondo = generator.gen();
-    VisualizerGLC::run(test_a_i,from_map_to_action_vec(&mondo.0),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000,mondo.3);
+    VisualizerGLC::run(true,from_map_to_action_vec(&mondo.0),mondo.1.clone(),mondo.0[mondo.1.0][mondo.1.1].elevation,7000,mondo.3);
 }
 
 fn from_map_to_action_vec(map: &Vec<Vec<Tile>>)->Vec<(RobotAction,WeatherType)>{

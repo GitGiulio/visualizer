@@ -12,14 +12,13 @@ impl Plugin for ArtificialIntelligencePlugin {
 fn update_game_update(mut game_update: ResMut<GameUpdate>,
                              mut game_data: ResMut<GameData>,
                              time: Res<Time>,
-                        mut artificial_intelligence: ResMut<TestAI>
 ){
     if game_data.next!=0{
         game_data.next -= 1;
         info!("next process_tick");
-        let update = artificial_intelligence.next();
+        /*let update = artificial_intelligence.next();
         for i in update{
             game_update.azioni.push(i);
-        }
+        }*/
     }
 }
