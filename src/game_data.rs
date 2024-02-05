@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy::utils::HashMap;
 use robotics_lib::world::environmental_conditions::WeatherType;
-use robotics_lib::world::tile::Content;
+use robotics_lib::world::tile::{Content, Tile};
 use robotics_lib::world::tile::Content::*;
 use crate::RobotAction;
 
@@ -74,17 +74,19 @@ pub(crate) struct GameData{
     pub(crate) autoplay:bool,
     pub(crate) next:usize,
     pub(crate) previous:usize,
+    pub(crate) world:Vec<Vec<Option<Tile>>>,
     pub(crate) robot_data:RobotData,
     pub(crate) camera_data:CameraData,
     pub(crate) timer:Timer,
     pub(crate) next_action:bool,
     pub(crate) frames:usize,
-    pub(crate) feed:Vec<(RobotAction,WeatherType)>, //TODO trova un nome migliore
+    pub(crate) feed:Vec<robotics_lib::event::events::Event>,
     pub(crate) feed_visibility:bool,
     pub(crate) map_radius:f32,
     pub(crate) hided_content:(f32,f32),
     pub(crate) content_visibility:bool,
     pub(crate) max_points:f32,
+    pub(crate) ai:bool,
 }
 impl GameData{
     pub fn get_autoplay(&self)->bool{
@@ -137,7 +139,7 @@ fn update_game_data(mut game_data: ResMut<GameData>,
     if !game_data.timer.just_finished(){
         return;
     }else {
-        //info!("frames{}",game_data.frames);
+        info!("frames{}",game_data.frames);
         game_data.frames = 0;
         game_data.next_action = true;
         game_data.robot_data.robot_velocity = Vec3::ZERO;

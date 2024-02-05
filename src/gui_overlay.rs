@@ -1,6 +1,4 @@
 use bevy::prelude::*;
-use bevy::sprite::{Anchor, MaterialMesh2dBundle};
-use bevy::ui::widget::UiImageSize;
 use robotics_lib::world::tile::Content;
 use crate::assets_loader::ImageAssets;
 use crate::game_data::{GameData, MySet};
@@ -257,9 +255,14 @@ fn create_gui(mut commands: Commands,
             ..default()
         },BackPackImageComponent));
 
+    let mut jolly_block_image = image_assets.jolly_block.clone();
+    if game_data.ai{
+        jolly_block_image = image_assets.mirto.clone();
+    }
+
     commands.spawn(
         (ImageBundle {
-            image: image_assets.jolly_block.clone().into(),
+            image: jolly_block_image.into(),
             style: Style {
                 position_type: PositionType::Absolute,
                 top: Val::Px(107.0),
@@ -321,7 +324,7 @@ fn update_energy_image(game_data: Res<GameData>,
                  mut energy_image_style_query: Query<&mut Style,With<EnergyImageComponent>>,
 ){
     let mut energy_image_style = energy_image_style_query.single_mut();
-    energy_image_style.width = Val::Px((game_data.robot_data.energy as f32 / 7000.0) * 194.0);
+    energy_image_style.width = Val::Px((game_data.robot_data.energy as f32 / 1000.0) * 194.0);
 }
 fn update_energy_update(mut energy_update_query: Query<&mut Text,With<EnergyUpdateComponent>>,
                         mut game_data: ResMut<GameData>,
@@ -381,7 +384,7 @@ fn update_feed(mut feed_query: Query<&mut Text,With<FeedComponent>>,
         while i < game_data.feed.len() as i32{
             if i >= 0 {
                 feed_string.push_str("\n");
-                let tmp = format!("{:?}",game_data.feed[i as usize].0);
+                let tmp = format!("{:?}",game_data.feed[i as usize]);
                 feed_string.push_str(&tmp);
             }
             i += 1;
@@ -391,7 +394,7 @@ fn update_feed(mut feed_query: Query<&mut Text,With<FeedComponent>>,
 }
 fn update_backpack(mut back_pack_query: Query<&mut Text,With<BackPackComponent>>,
                    mut game_data: ResMut<GameData>,
-) {
+) { //TODO rifare con immagine al posto di schifo per il back_pack
     let mut back_pack_text = back_pack_query.single_mut();
     if game_data.robot_data.back_pack_visibility == 0{
         back_pack_text.sections[0].value = format!("");

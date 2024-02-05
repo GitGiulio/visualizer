@@ -1,9 +1,9 @@
 use bevy::prelude::*;
-use robotics_lib::world::environmental_conditions::WeatherType;
 use robotics_lib::world::tile::*;
+use robotics_lib::event::events::Event::*;
+use robotics_lib::world::environmental_conditions::WeatherType::*;
 use crate::GameUpdate;
 use crate::game_data::{GameData, MySet};
-use crate::RobotAction::UpdateTile;
 use crate::world::ContentComponent;
 
 pub struct InputPlugin;
@@ -99,79 +99,51 @@ fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
         game_data.content_visibility = !game_data.content_visibility;
     }
 }
-fn destroy_test(keyboard_input: Res<Input<KeyCode>>, mut game_update: ResMut<GameUpdate>){ // è solo per test, rimuovere
+fn destroy_test(keyboard_input: Res<Input<KeyCode>>,
+                mut game_update: ResMut<GameUpdate>,
+                mut game_data: ResMut<GameData>,
+){ // è solo per test, rimuovere
     if keyboard_input.just_pressed(KeyCode::Q){
-        game_update.azioni.push(
-            (UpdateTile{
-                new_tile: Tile {
-                    tile_type: TileType::DeepWater,
-                    content: Content::Coin(1),
-                    elevation: 0,
-                },
-                back_pack_update: vec![(Content::Garbage(0),12)],
-                coordinates: (0.0, 0.0),
-                energy: -110,
-                points: 500.0,
-            },WeatherType::Sunny)
-        );
+        game_update.world[0][0].as_mut().unwrap().tile_type = TileType::Street;
     }else if keyboard_input.just_pressed(KeyCode::W){
-        game_update.azioni.push((
-            crate::RobotAction::Move {
-                direction: crate::Direction::Up,
-                elevation: 0.0,
-                energy: -10,
-                points: 4.0,
-            },WeatherType::Sunny)
-        );
+        game_update.events.push( Moved(Tile{
+            tile_type: TileType::DeepWater,
+            content: Content::Fire,
+            elevation: 0,
+        },(game_data.robot_data.robot_translation.z as usize + 1,game_data.robot_data.robot_translation.z as usize + 0 )));
     }else if keyboard_input.just_pressed(KeyCode::A){
-        game_update.azioni.push((
-            crate::RobotAction::Move {
-                direction: crate::Direction::Left,
-                elevation: 0.0,
-                energy:-10,
-                points: 2.0,
-            },WeatherType::Sunny)
-        );
+        game_update.events.push( Moved(Tile{
+            tile_type: TileType::DeepWater,
+            content: Content::Fire,
+            elevation: 0,
+        },(game_data.robot_data.robot_translation.z as usize + 0,game_data.robot_data.robot_translation.z as usize + 1 )));
     }else if keyboard_input.just_pressed(KeyCode::S){
-        game_update.azioni.push((
-            crate::RobotAction::Move {
-                direction: crate::Direction::Down,
-                elevation: 0.0,
-                energy: -10,
-                points: 1.0,
-            },WeatherType::Sunny)
-        );
+        game_update.events.push( Moved(Tile{
+            tile_type: TileType::DeepWater,
+            content: Content::Fire,
+            elevation: 0,
+        },(game_data.robot_data.robot_translation.z as usize - 1,game_data.robot_data.robot_translation.z as usize + 0 )));
     }else if keyboard_input.just_pressed(KeyCode::D){
-        game_update.azioni.push((
-            crate::RobotAction::Move {
-                direction: crate::Direction::Right,
-                elevation: 0.0,
-                energy: -10,
-                points: 3.0,
-            },WeatherType::Sunny)
-        );
+        game_update.events.push( Moved(Tile{
+            tile_type: TileType::DeepWater,
+            content: Content::Fire,
+            elevation: 0,
+        },(game_data.robot_data.robot_translation.z as usize + 0,game_data.robot_data.robot_translation.z as usize - 1 )));
     }else if keyboard_input.just_pressed(KeyCode::E){
-        game_update.azioni.push((
-            crate::RobotAction::GainEnergy {
-                energy: 0,
-                points: 0.0,
-            },WeatherType::TrentinoSnow)
-        );
+        /*game_update.events.push(
+            TimeChanged(TrentinoSnow)
+        );*/
     }else if keyboard_input.just_pressed(KeyCode::G){
-        game_update.azioni.push((
-            crate::RobotAction::GainEnergy {
-                energy: 1000,
-                points: 0.0,
-            },WeatherType::Sunny)
+        game_update.events.push(
+            EnergyRecharged(1000)
         );
     }else if keyboard_input.just_pressed(KeyCode::T){
-        game_update.azioni.push((
-            crate::RobotAction::Teleport {
-                destination: (6.0,6.0),
-                destination_elevation: 0.0,
-                energy: -10,
-                points: 3.0,
-            },WeatherType::Sunny)
+        game_update.events.push(
+           Moved(Tile{
+               tile_type: TileType::DeepWater,
+               content: Content::Fire,
+               elevation: 0,
+           },(6,6))
         );
     }
     //info!("agg {:?}",aggiornamento);

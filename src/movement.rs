@@ -15,7 +15,6 @@ fn update_position_robot(mut robot_query: Query<&mut Transform,With<RobotCompone
                          game_data: Res<GameData>,
                          time: Res<Time>){
     let mut robot_transform = robot_query.single_mut();
-    //info!("robot_velocity: {}, delta: {}, r_transform: {}",game_data.robot_velocity,time.delta_seconds(),robot_transform.translation);
     robot_transform.translation.x += game_data.robot_data.robot_velocity.x * time.delta_seconds();
     robot_transform.translation.y += game_data.robot_data.robot_velocity.y * time.delta_seconds();
     robot_transform.translation.z += game_data.robot_data.robot_velocity.z * time.delta_seconds();

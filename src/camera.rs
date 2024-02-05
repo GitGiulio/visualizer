@@ -3,6 +3,7 @@ use crate::GameUpdate;
 use crate::RobotAction;
 use crate::game_data::{GameData, MySet};
 use crate::Direction;
+use robotics_lib::event::events::Event::*;
 
 const CAMERA_0_VERTICAL_DISTANCE:f32 = 10.0;
 const CAMERA_1_HORIZONTAL_DISTANCE:f32 = 10.0;
@@ -138,10 +139,6 @@ fn camera_follow_mouse(
     }
 }
 
-fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
-}
-
 fn camera_follow_robot(
     mut camera_query: Query<&mut Transform,With<Camera3DComponent>>,
     mut game_data: ResMut<GameData>,
@@ -155,9 +152,70 @@ fn camera_follow_robot(
         if game_data.camera_data.camera_mode == 0{
             return;
         }
-        if game_update.azioni.len() > 0{
-            match &game_update.azioni[0].0 {
-                RobotAction::Move{direction,elevation,energy,points} => {
+        if game_update.events.len() > 0{
+            match &game_update.events[0]{
+                Moved(tile,(x,y)) =>{
+                    let mut direction = game_data.robot_data.robot_direction.clone();
+                    match (*x as f32 - f32::round(game_data.robot_data.robot_translation.x) , *y as f32 - f32::round(game_data.robot_data.robot_translation.z)) {
+                        (0.0,1.0) => {
+                            direction = Direction::Right;
+                        }
+                        (0.0,-1.0) => {
+                            direction = Direction::Left;
+                        }
+                        (1.0,0.0) => {
+                            direction = Direction::Up;
+                        }
+                        (-1.0,0.0) => {
+                            direction = Direction::Down;
+                        }
+                        _ => { //Teleport only way the robot can move by more than 1 tile
+                            let destination = (*x as f32,*y as f32);
+                            let destination_elevation = tile.elevation as f32;
+
+                            if game_data.camera_data.camera_mode == 1{
+                                camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation/10.0, destination.1 - 5.0).translation;
+                                game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation/10.0, destination.1 - 5.0).translation;
+                            }else if game_data.camera_data.camera_mode == 2 {
+                                match game_data.camera_data.camera_direction {
+                                    Direction::Right => {
+                                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0 + CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
+                                    }
+                                    Direction::Left => {
+                                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0 - CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
+                                    }
+                                    Direction::Up => {
+                                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - CAMERA_2_HORIZONTAL_DISTANCE).translation;
+                                    }
+                                    Direction::Down => {
+                                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 + CAMERA_2_HORIZONTAL_DISTANCE).translation;
+                                    }
+                                }
+                                *camera_transform = game_data.camera_data.camera_transform;
+                            }else if game_data.camera_data.camera_mode == 3 && game_data.camera_data.camera_mode != 0 {
+                                if game_data.camera_data.camera_mode_bu == 1{
+                                    game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - 5.0).translation;
+                                }else if game_data.camera_data.camera_mode_bu == 2 {
+                                    match game_data.camera_data.camera_direction {
+                                        Direction::Right => {
+                                            game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0 + CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
+                                        }
+                                        Direction::Left => {
+                                            game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0 - CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
+                                        }
+                                        Direction::Up => {
+                                            game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - CAMERA_2_HORIZONTAL_DISTANCE).translation;
+                                        }
+                                        Direction::Down => {
+                                            game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 + CAMERA_2_HORIZONTAL_DISTANCE).translation;
+                                        }
+                                    }
+                                }
+                            }
+                            return;
+                        }
+                    }
+                    let elevation = tile.elevation as f32;
                     match direction {
                         Direction::Right => {
                             if game_data.camera_data.camera_mode != 3{
@@ -328,52 +386,9 @@ fn camera_follow_robot(
                             }
                         }
                     }
-                },
-                RobotAction::Teleport {destination,destination_elevation,energy,points} => {
-                    if game_data.camera_data.camera_mode == 1{
-                        camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation/10.0, destination.1 - 5.0).translation;
-                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation/10.0, destination.1 - 5.0).translation;
-                    }else if game_data.camera_data.camera_mode == 2 {
-                        match game_data.camera_data.camera_direction {
-                            Direction::Right => {
-                                game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0 + CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
-                            }
-                            Direction::Left => {
-                                game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0 - CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
-                            }
-                            Direction::Up => {
-                                game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - CAMERA_2_HORIZONTAL_DISTANCE).translation;
-                            }
-                            Direction::Down => {
-                                game_data.camera_data.camera_transform.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 + CAMERA_2_HORIZONTAL_DISTANCE).translation;
-                            }
-                        }
-                        *camera_transform = game_data.camera_data.camera_transform;
-                    }else if game_data.camera_data.camera_mode == 3 && game_data.camera_data.camera_mode != 0 {
-                        if game_data.camera_data.camera_mode_bu == 1{
-                            game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - 5.0).translation;
-                        }else if game_data.camera_data.camera_mode_bu == 2 {
-                            match game_data.camera_data.camera_direction {
-                                Direction::Right => {
-                                    game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0 + CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
-                                }
-                                Direction::Left => {
-                                    game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0 - CAMERA_2_HORIZONTAL_DISTANCE, camera_transform.translation.y + destination_elevation / 10.0, destination.1).translation;
-                                }
-                                Direction::Up => {
-                                    game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 - CAMERA_2_HORIZONTAL_DISTANCE).translation;
-                                }
-                                Direction::Down => {
-                                    game_data.camera_data.camera_transform_bu.translation = Transform::from_xyz(destination.0, camera_transform.translation.y + destination_elevation / 10.0, destination.1 + CAMERA_2_HORIZONTAL_DISTANCE).translation;
-                                }
-                            }
-                        }
-                    }
-                },
+                }
                 _ => {}
             }
-
-
         }
     }
 }

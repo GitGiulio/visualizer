@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use robotics_lib::event::events::Event::*;
 use crate::assets_loader::SceneAssets;
 use crate::GameUpdate;
 use crate::RobotAction::*;
@@ -17,8 +18,8 @@ impl Plugin for RobotPlugin{
     fn build(&self, app: &mut App) {
         app.add_systems(PostStartup,spawn_robot)
             .add_systems(Update,move_robot.in_set(MySet::Third))
-            .add_systems(Update,get_energy.in_set(MySet::Third))
-            .add_systems(Update,teleport_robot.in_set(MySet::Third))
+            .add_systems(Update,robot_energy.in_set(MySet::Third))
+            .add_systems(Update,robot_points.in_set(MySet::Third))
             .add_systems(Update,fine_robot.in_set(MySet::Third));
     }
 }
@@ -41,46 +42,46 @@ fn fine_robot(game_data: Res<GameData>,
     if !game_data.next_action{
         return;
     }
-    if game_update.azioni.len()==0 {
+    if game_update.events.len()==0 {
         return;
     }
-    /*
-    match game_update.azioni[0] {
+
+    match &game_update.events[0] {
         Terminated => {
             //TODO schermo nero con scritta tipo "the robot terminated his task" e un bottone che cliccato fa terminare l'app (forse potrei anche mettere un bottone per riavviare)
         }
         _ => { return; }
-    }*/
+    }
 }
-fn get_energy(mut game_update: ResMut<GameUpdate>,
+fn robot_energy(mut game_update: ResMut<GameUpdate>,
               mut game_data: ResMut<GameData>,
 ){
     if !game_data.next_action{
         return;
     }
-    if game_update.azioni.len() != 0 {
-        match &game_update.azioni[0].0 {
-            GainEnergy{energy,points} => {
-                game_data.robot_data.points += points;
-                game_data.robot_data.points_update = *points;
-                game_data.robot_data.energy += energy;
-                game_data.robot_data.energy_update = *energy;
+    if game_update.events.len() != 0 {
+        match game_update.events[0] {
+            EnergyRecharged(energy) => {
+                game_data.robot_data.energy += energy as i32;
+                game_data.robot_data.energy_update = energy as i32;
+            }
+            EnergyConsumed(energy) => {
+                game_data.robot_data.energy -= energy as i32;
+                game_data.robot_data.energy_update = energy as i32;
             }
             _ => {return;}
         }
-        /*
-        match &game_update.azioni[0] {
-            EnergyRecharged(energy) => {
-                game_data.robot_data.energy += energy;
-                game_data.robot_data.energy_update = *energy;
-            }
-            EnergyConsumed(energy) => {
-                game_data.robot_data.energy -= energy;
-                game_data.robot_data.energy_update = *energy;
-            }
-            _ => {return;}
-        }*/
     }
+
+}
+fn robot_points(mut game_update: ResMut<GameUpdate>,
+                mut game_data: ResMut<GameData>,
+){
+    if !game_data.next_action{
+        return;
+    }
+    game_data.robot_data.points_update = game_update.points - game_data.robot_data.points;
+    game_data.robot_data.points = game_update.points;
 }
 fn move_robot(mut robot_query: Query<&mut Transform,With<RobotComponent>>,
               mut game_update: ResMut<GameUpdate>,
@@ -91,13 +92,34 @@ fn move_robot(mut robot_query: Query<&mut Transform,With<RobotComponent>>,
     }else {
         let mut robot_transform = robot_query.single_mut();
         robot_transform.translation = game_data.robot_data.robot_translation;
-        if game_update.azioni.len() != 0 {
-            match &game_update.azioni[0].0 {
-                Move{direction,elevation,energy,points} => {
-                    game_data.robot_data.points += points;
-                    game_data.robot_data.points_update = *points;
-                    game_data.robot_data.energy += energy;
-                    game_data.robot_data.energy_update = *energy;
+        if game_update.events.len() != 0 {
+            match &game_update.events[0] {
+                Moved(tile,(z,x)) =>{
+                    let mut direction = game_data.robot_data.robot_direction.clone();
+                    match (*x as f32 - f32::round(game_data.robot_data.robot_translation.x) , *z as f32 - f32::round(game_data.robot_data.robot_translation.z)) {
+                        (0.0,1.0) => {
+                            direction = crate::Direction::Right;
+                        }
+                        (0.0,-1.0) => {
+                            direction = crate::Direction::Left;
+                        }
+                        (1.0,0.0) => {
+                            direction = crate::Direction::Up;
+                        }
+                        (-1.0,0.0) => {
+                            direction = crate::Direction::Down;
+                        }
+                        _ => { //Teleport only way the robot can move by more than 1 tile
+                            let mut destination = (*x as f32,*z as f32);
+                            let mut destination_elevation = tile.elevation as f32;
+
+                            let mut robot_transform = robot_query.single_mut();
+                            robot_transform.translation = Transform::from_xyz(destination.0, robot_transform.translation.y + destination_elevation/10.0, destination.1).translation;
+                            game_data.robot_data.robot_translation = Transform::from_xyz(destination.0, robot_transform.translation.y + destination_elevation/10.0, destination.1).translation;
+                            return;
+                        }
+                    }
+                    let elevation = tile.elevation as f32;
                     match direction {
                         crate::Direction::Right => {
                             game_data.robot_data.robot_translation = Transform::from_xyz(robot_transform.translation.x - 1.0, robot_transform.translation.y + elevation/10.0, robot_transform.translation.z).looking_at(Vec3::ZERO, Vec3::Z).translation;
@@ -147,30 +169,6 @@ fn move_robot(mut robot_query: Query<&mut Transform,With<RobotComponent>>,
                 }
                 _ => {
                 }
-            }
-
-        }
-    }
-}
-fn teleport_robot(mut robot_query: Query<&mut Transform,With<RobotComponent>>,
-                  mut game_update: ResMut<GameUpdate>,
-                  mut game_data: ResMut<GameData>,
-){
-    if !game_data.next_action{
-        return;
-    }else {
-        if game_update.azioni.len() != 0 {
-            match &game_update.azioni[0].0 {
-                Teleport{destination,destination_elevation,energy,points} => {
-                    let mut robot_transform = robot_query.single_mut();
-                    robot_transform.translation = Transform::from_xyz(destination.0, robot_transform.translation.y + destination_elevation/10.0, destination.1).translation;
-                    game_data.robot_data.robot_translation = Transform::from_xyz(destination.0, robot_transform.translation.y + destination_elevation/10.0, destination.1).translation;
-                    game_data.robot_data.points += points;
-                    game_data.robot_data.points_update = *points;
-                    game_data.robot_data.energy += energy;
-                    game_data.robot_data.energy_update = *energy;
-                }
-                _ => {return;}
             }
 
         }

@@ -16,8 +16,17 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets_loader.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets_loader.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_data.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_data.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_overlay.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_overlay.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/movement.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/movement.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/robot.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/robot.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rudimental_a_i.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/rudimental_a_i.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user_inputs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/user_inputs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/weather.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/weather.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/world.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,6 +175,7 @@
       <workItem from="1706860893117" duration="1337000" />
       <workItem from="1706866528185" duration="449000" />
       <workItem from="1706974494337" duration="1671000" />
+      <workItem from="1707127084681" duration="15029000" />
     </task>
     <servers />
   </component>
