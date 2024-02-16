@@ -1,8 +1,5 @@
 use bevy::prelude::*;
-use robotics_lib::world::tile::*;
-use robotics_lib::event::events::Event::*;
-use robotics_lib::world::environmental_conditions::WeatherType::*;
-use crate::GameUpdate;
+use crate::camera::Camera3DComponent;
 use crate::game_data::{GameData, MySet};
 use crate::world::ContentComponent;
 
@@ -10,8 +7,8 @@ pub struct InputPlugin;
 
 impl Plugin for InputPlugin{
     fn build(&self, app: &mut App) {
-        app.add_systems(Update,go_stop)
-            .add_systems(Update,destroy_test.in_set(MySet::First))//<--- rimuovere
+        app.add_systems(Update,go_stop.in_set(MySet::First))
+            .add_systems(Update,next.in_set(MySet::First))
             .add_systems(Update,back_pack_show_hide.in_set(MySet::First))
             .add_systems(Update,map_show_hide.in_set(MySet::First))
             .add_systems(Update,content_show_hide.in_set(MySet::First))
@@ -19,50 +16,44 @@ impl Plugin for InputPlugin{
     }
 }
 
-fn go_stop(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
 
-    if keyboard_input.pressed(KeyCode::Space) {
+///Pressing *Space* the user can change from autoplay to not///
+fn go_stop(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
+    if keyboard_input.just_pressed(KeyCode::Space){
         game_data.autoplay = !game_data.autoplay;
     }
 }
-fn next(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
-
-    if keyboard_input.pressed(KeyCode::Right) && !game_data.autoplay{
-        game_data.next += 1;
-        if game_data.previous > 0 {
-            game_data.previous -= 1;
+///Pressing *Right* the robot will perform the next action///
+fn next(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
+    if keyboard_input.just_pressed(KeyCode::Right){
+        if game_data.next < 1{
+            game_data.next += 1;
         }
-
     }
 }
-fn previous(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
-    if keyboard_input.pressed(KeyCode::Left) && !game_data.autoplay{
-        if game_data.next > 0 {
-            game_data.next -= 1;
-        }
-        game_data.previous += 1;
-    }
-}
-fn back_pack_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
+fn back_pack_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
     if keyboard_input.just_pressed(KeyCode::B) {
         if game_data.robot_data.back_pack_visibility == 0{
             game_data.robot_data.back_pack_visibility = 1;
-        } else if game_data.robot_data.back_pack_visibility == 1 {
-            game_data.robot_data.back_pack_visibility = 2;
-        }else {
+        } else {
             game_data.robot_data.back_pack_visibility = 0;
         }
     }
 }
-fn feed_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///USER INPUT VERO///
+fn feed_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){
     if keyboard_input.just_pressed(KeyCode::F) {
         game_data.feed_visibility = !game_data.feed_visibility;
     }
 }
-fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<GameData>){ ///Pressing M the user can visualize the entire world known///
+fn map_show_hide(keyboard_input: Res<Input<KeyCode>>,
+                 mut game_data: ResMut<GameData>,
+                mut query: Query<&mut Transform,With<Camera3DComponent>>
+){ ///Pressing M the user can visualize the entire world known///
     if keyboard_input.just_pressed(KeyCode::M) {
-        info!("MAPPAPAAAA");
         if game_data.camera_data.camera_mode != 3{
+            if game_data.camera_data.camera_mode == 1 || game_data.camera_data.camera_mode == 2 {
+                return;
+            }
             game_data.camera_data.camera_mode_bu = game_data.camera_data.camera_mode;
             game_data.camera_data.camera_direction_bu = game_data.camera_data.camera_direction.clone();
             game_data.camera_data.camera_transform_bu = game_data.camera_data.camera_transform;
@@ -70,15 +61,40 @@ fn map_show_hide(keyboard_input: Res<Input<KeyCode>>, mut game_data: ResMut<Game
 
             game_data.camera_data.camera_mode = 3;
             game_data.camera_data.camera_direction = crate::Direction::Up;
-            game_data.camera_data.camera_transform = Transform::from_xyz(0.0,game_data.map_radius * 1.5,0.0).looking_at(Vec3::ZERO,Vec3::Z);
-            game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.robot_data.robot_translation.x,game_data.map_radius * 1.5,game_data.robot_data.robot_translation.z).translation;
+            game_data.camera_data.camera_transform = Transform::from_xyz(0.0,0.0,0.0).looking_at(Vec3::ZERO,Vec3::Z);
+            game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.world_size as f32/2.0,game_data.world_size as f32 * 1.3,game_data.world_size as f32/2.0).translation;
             game_data.camera_data.camera_velocity = Vec3::ZERO;
         }else {
-            game_data.camera_data.camera_mode = game_data.camera_data.camera_mode_bu;
-            game_data.camera_data.camera_direction = game_data.camera_data.camera_direction_bu.clone();
-            game_data.camera_data.camera_transform = game_data.camera_data.camera_transform_bu;
-            game_data.camera_data.camera_velocity = game_data.camera_data.camera_velocity_bu;
+            if game_data.camera_data.camera_mode_bu == 1 { //CAMERA 1 (fixed third person)
+                game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + crate::camera::CAMERA_1_VERTICAL_DISTANCE, game_data.robot_data.robot_translation.z - crate::camera::CAMERA_1_HORIZONTAL_DISTANCE).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 4.0, game_data.robot_data.robot_translation.z), Vec3::Y);
+                game_data.camera_data.camera_transform.rotate_x(f32::to_radians(crate::camera::CAMERA_1_INCLINATION));
+                game_data.camera_data.camera_mode = 1;
+            }else if game_data.camera_data.camera_mode_bu == 2{ //CAMERA 2 (robot third person)
+                game_data.camera_data.camera_mode = 2;
+                game_data.camera_data.camera_transform = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + crate::camera::CAMERA_2_VERTICAL_DISTANCE, game_data.robot_data.robot_translation.z - crate::camera::CAMERA_2_HORIZONTAL_DISTANCE).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + 4.0, game_data.robot_data.robot_translation.z), Vec3::Y);
+                game_data.camera_data.camera_transform.rotate_x(f32::to_radians(crate::camera::CAMERA_2_INCLINATION));
+                match game_data.camera_data.camera_direction {
+                    crate::Direction::Right => {
+                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.robot_data.robot_translation.x + crate::camera::CAMERA_2_HORIZONTAL_DISTANCE, game_data.camera_data.camera_transform.translation.y, game_data.robot_data.robot_translation.z).translation;
+                        game_data.camera_data.camera_transform.rotate_y(f32::to_radians(-90.0));
+                    }
+                    crate::Direction::Left => {
+                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.robot_data.robot_translation.x - crate::camera::CAMERA_2_HORIZONTAL_DISTANCE, game_data.camera_data.camera_transform.translation.y, game_data.robot_data.robot_translation.z).translation;
+                        game_data.camera_data.camera_transform.rotate_y(f32::to_radians(90.0));
+                    }
+                    crate::Direction::Up => {}
+                    crate::Direction::Down => {
+                        game_data.camera_data.camera_transform.translation = Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.camera_data.camera_transform.translation.y, game_data.robot_data.robot_translation.z + crate::camera::CAMERA_2_HORIZONTAL_DISTANCE).translation;
+                        game_data.camera_data.camera_transform.rotate_y(f32::to_radians(180.0));
+                    }
+                }
+            }else if game_data.camera_data.camera_mode_bu == 0{//CAMERA 0 (Top camera)
+                game_data.camera_data.camera_transform =  Transform::from_xyz(game_data.robot_data.robot_translation.x, game_data.robot_data.robot_translation.y + crate::camera::CAMERA_0_VERTICAL_DISTANCE, game_data.robot_data.robot_translation.z).looking_at(Vec3::new(game_data.robot_data.robot_translation.x, 0.0, game_data.robot_data.robot_translation.z), Vec3::Z);
+                game_data.camera_data.camera_mode = 0;
+            }
         }
+        let mut camera_transform = query.single_mut();
+        camera_transform.translation = game_data.camera_data.camera_transform.translation;
     }
 }
 fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
@@ -90,7 +106,7 @@ fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
             for mut i in query.iter_mut(){
                 *i = Visibility::Hidden;
             }
-            game_data.hided_content = (777777.0,777777.0);
+            game_data.hided_content = (777777.0,777777.0); // a random number bigger than the biggest world size
         }else {
             for mut i in query.iter_mut(){
                 *i = Visibility::Visible;
@@ -98,53 +114,4 @@ fn content_show_hide(keyboard_input: Res<Input<KeyCode>>,
         }
         game_data.content_visibility = !game_data.content_visibility;
     }
-}
-fn destroy_test(keyboard_input: Res<Input<KeyCode>>,
-                mut game_update: ResMut<GameUpdate>,
-                mut game_data: ResMut<GameData>,
-){ // è solo per test, rimuovere
-    if keyboard_input.just_pressed(KeyCode::Q){
-        game_update.world[0][0].as_mut().unwrap().tile_type = TileType::Street;
-    }else if keyboard_input.just_pressed(KeyCode::W){
-        game_update.events.push( Moved(Tile{
-            tile_type: TileType::DeepWater,
-            content: Content::Fire,
-            elevation: 0,
-        },(game_data.robot_data.robot_translation.z as usize + 1,game_data.robot_data.robot_translation.z as usize + 0 )));
-    }else if keyboard_input.just_pressed(KeyCode::A){
-        game_update.events.push( Moved(Tile{
-            tile_type: TileType::DeepWater,
-            content: Content::Fire,
-            elevation: 0,
-        },(game_data.robot_data.robot_translation.z as usize + 0,game_data.robot_data.robot_translation.z as usize + 1 )));
-    }else if keyboard_input.just_pressed(KeyCode::S){
-        game_update.events.push( Moved(Tile{
-            tile_type: TileType::DeepWater,
-            content: Content::Fire,
-            elevation: 0,
-        },(game_data.robot_data.robot_translation.z as usize - 1,game_data.robot_data.robot_translation.z as usize + 0 )));
-    }else if keyboard_input.just_pressed(KeyCode::D){
-        game_update.events.push( Moved(Tile{
-            tile_type: TileType::DeepWater,
-            content: Content::Fire,
-            elevation: 0,
-        },(game_data.robot_data.robot_translation.z as usize + 0,game_data.robot_data.robot_translation.z as usize - 1 )));
-    }else if keyboard_input.just_pressed(KeyCode::E){
-        /*game_update.events.push(
-            TimeChanged(TrentinoSnow)
-        );*/
-    }else if keyboard_input.just_pressed(KeyCode::G){
-        game_update.events.push(
-            EnergyRecharged(1000)
-        );
-    }else if keyboard_input.just_pressed(KeyCode::T){
-        game_update.events.push(
-           Moved(Tile{
-               tile_type: TileType::DeepWater,
-               content: Content::Fire,
-               elevation: 0,
-           },(6,6))
-        );
-    }
-    //info!("agg {:?}",aggiornamento);
 }

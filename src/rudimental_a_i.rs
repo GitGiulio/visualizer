@@ -1,60 +1,62 @@
-use std::sync::Mutex;
-use std::thread;
 use bevy::prelude::*;
-use lazy_static::lazy_static;
+use robotics_lib::runner::{Robot, Runnable, Runner};
 use crate::game_data::*;
-use crate::GameUpdate;
+use crate::{robot_view, RunnerTag};
 
-
-lazy_static! {
-    static ref aggiornamenti: Mutex<Aggiornamento> = Mutex::new(Aggiornamento{ next:false,eventi: vec![], points:0.0, world:vec![] });
-}
-
-struct Aggiornamento {
-    next:bool,
-    eventi: Vec<robotics_lib::event::events::Event>,
-    points: f32,
-    world: Vec<Vec<Option<robotics_lib::world::tile::Tile>>>,
-}
 pub struct ArtificialIntelligencePlugin;
 
 impl Plugin for ArtificialIntelligencePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PostStartup, setup_artificial_intelligence)
-            .add_systems(Update, update_game_update.in_set(MySet::First));
+        /*app.add_systems(PreStartup, setup_artificial_intelligence)
+            .add_systems(Update, robot_runner.in_set(MySet::Third));*/
     }
 }
+/*
+fn setup_artificial_intelligence(mut game_data: ResMut<GameData>, mut commands: Commands){
 
-fn setup_artificial_intelligence(mut game_update: ResMut<GameUpdate>,
-                      mut game_data: ResMut<GameData>,
-){
+    let mut run = Runner::new(Box::new(LunaticRobot::new()), &mut generator).unwrap();
 
-    if game_data.ai{
-        thread::spawn(|| {
-            //AIDIGOLDO::funzionechesitaomodicendo();
-            println!("la funzione della libreria AI di Goldo");
-        });
+
+    if game_data.ai{ //here I initialize the runner resource with right AI robot
+        let robot = MirtoRobot::new(Robot::new(), false);
+        run = Runner::new(Box::new(robot), &mut generator).unwrap();
     }else{
-        thread::spawn(|| {
-            println!("la funzione della libreria AI di MURRU");
-        });
+        let robot = LunaticRobot::new();
+        run = Runner::new(Box::new(robot), &mut generator).unwrap();
     }
-    //TODO creo un nuovo thread in cui chiamo la funzione dell'intelligenza artificiale corrispondente
-}
-fn update_game_update(mut game_update: ResMut<GameUpdate>,
-                      mut game_data: ResMut<GameData>,
-){
-    if game_data.next!=0{
-        game_data.next -= 1;
-        info!("next process_tick");
-        let mut update = aggiornamenti.lock().unwrap();
-        update.next = true;
-    }else {
-        let mut update = aggiornamenti.lock().unwrap();
-        for i in update.eventi.iter(){
-            game_update.events.push(i.clone());
+    let spawn_point = (run.get_robot().get_coordinate().get_row(),run.get_robot().get_coordinate().get_col());
+    let robot_energy = run.get_robot().get_energy().get_energy_level() as i32;
+
+    let mut runner = RunnerTag(run);
+    let _ = runner.0.game_tick();
+
+    let mondo = robot_view.lock().unwrap();
+
+    match &mondo[spawn_point.0][spawn_point.1]{
+        None => {
+            panic!("spawn point unknown");
         }
-        game_update.world = update.world.clone();
-        game_update.points = update.points.clone();
+        Some(tile) => {
+            game_data.current_tile_elevation = tile.elevation as f32;
+        }
+    }
+
+    game_data.robot_data.energy = robot_energy;
+    game_data.robot_data.robot_translation = Transform::from_translation(Vec3::new(spawn_point.0 as f32,game_data.current_tile_elevation  / 10.0 - 0.95,spawn_point.1 as f32)).translation;
+
+    game_data.camera_data.camera_transform = Transform::from_translation(Vec3::new(0.0,10.0,0.0)).looking_at(Vec3::ZERO,Vec3::Z);
+    game_data.camera_data.camera_transform.translation = Transform::from_translation(Vec3::new(spawn_point.0 as f32, (game_data.current_tile_elevation / 10.0) + 9.05, spawn_point.1 as f32)).translation;
+
+    commands.insert_resource(runner);
+}
+fn robot_runner(mut game_data: ResMut<GameData>, mut runner: ResMut<RunnerTag>){
+    if game_data.next <= 0{
+        return;
+    }
+    { // next game tick
+        let _ = runner.0.game_tick();
+        game_data.next -= 1;
+        game_data.update_world = true;
     }
 }
+*/
